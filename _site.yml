@@ -9,6 +9,6 @@ navbar:
     - text: "Predictor"
       href: Links.html
     - text: "Authors"
-      href: Links.html
+      href: Authors.html
 output_dir: "docs"
-theme: cosmo
+theme: Journal
