@@ -1,11 +1,13 @@
-name: "Matt"
+name: "Cardiac events predictor"
 navbar:
-  title: "Matt"
+  title: "Cardiac events predictor"
   left:
-    - text: "Home"
+    - text: "Data Analysis"
       href: index.html
-    - text: "Journal"
+    - text: "Interpretation"
       href: Journal.html
-    - text: "Links"
+    - text: "Predictor"
+      href: Links.html
+    - text: "Authors"
       href: Links.html
 output_dir: "docs"
