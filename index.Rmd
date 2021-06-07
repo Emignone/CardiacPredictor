@@ -19,9 +19,10 @@ output: html_document
 
 # **Cardiac events predictor**
 
-This is a template example for lab journaling. Students in Matt Crump's Human Cognition and Performance Lab will use this template to learn R, and other things. Students can replace this text with more fun things. People not in my lab can use this too.
+We have analyzed the given dataset from different perspectives. 
+We started by researching on the subject and becoming familiar with the different concepts and pathologies. After understanding the subject, we proceeded to apply the knowledge, both in the analysis, the interpretation and finally in the predictor.
 
-## How to use
+## Analysis
 
 1. fork the repo for this website and follow instructions on read me to get set up. [https://github.com/CrumpLab/LabJournalWebsite](https://github.com/CrumpLab/LabJournalWebsite)
 

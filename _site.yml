@@ -11,3 +11,4 @@ navbar:
     - text: "Authors"
       href: Links.html
 output_dir: "docs"
+theme: cosmo
