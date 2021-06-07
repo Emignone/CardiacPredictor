@@ -7,15 +7,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# **We are**
 
-## [Maria Emilia Mignone](emilia.mignone@ing.austral.edu.ar)
+
+## [Maria Emilia Mignone](mailto:emilia.mignone@ing.austral.edu.ar)
 ### **Biomedical engineering student**
-
+<a href="mailto:emi.gim.01@gmail.com">tu texto de anclaje</a> 
 ###
 ###
 
-## [Micaela Dominguez](micaela.dominguez@ing.austral.edu.ar) 
+## [Micaela Dominguez](micaela.dominguez@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
 ###
@@ -26,7 +26,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ###
 ###
-
 
 </div>
 <div class="col-sm-6">
@@ -39,3 +38,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## [Juan Manuel Perez Menendez](juanmanuel.perezmenendez@ing.austral.edu.ar)
 ### **Software engineering student**
+
+</a>
+</div>
