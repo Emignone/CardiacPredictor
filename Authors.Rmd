@@ -11,32 +11,28 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## [Maria Emilia Mignone](mailto:emilia.mignone@ing.austral.edu.ar)
 ### **Biomedical engineering student**
-###
-###
+
+***
+***
 
 ## [Micaela Dominguez](mailto:micaela.dominguez@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
-###
-###
+***
+***
 
 ## [Camila Contestabile](mailto:camila.contestabile@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
-###
-###
-
-</div>
-<div class="col-sm-6">
+***
+***
 
 ## [Guido Molaro](mailto:guido.molaro@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
-###
-###
+***
+***
 
 ## [Juan Manuel Perez Menendez](mailto:juanmanuel.perezmenendez@ing.austral.edu.ar)
 ### **Software engineering student**
 
-</a>
-</div>
