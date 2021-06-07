@@ -11,4 +11,5 @@ navbar:
     - text: "Authors"
       href: Authors.html
 output_dir: "docs"
-theme: Journal
+css: bootstrap.css
+theme: yeti

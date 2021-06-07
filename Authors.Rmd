@@ -11,17 +11,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## [Maria Emilia Mignone](mailto:emilia.mignone@ing.austral.edu.ar)
 ### **Biomedical engineering student**
-<a href="mailto:emi.gim.01@gmail.com">tu texto de anclaje</a> 
 ###
 ###
 
-## [Micaela Dominguez](micaela.dominguez@ing.austral.edu.ar)
+## [Micaela Dominguez](mailto:micaela.dominguez@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
 ###
 ###
 
-## [Camila Contestabile](camila.contestabile@ing.austral.edu.ar)
+## [Camila Contestabile](mailto:camila.contestabile@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
 ###
@@ -30,13 +29,13 @@ knitr::opts_chunk$set(echo = TRUE)
 </div>
 <div class="col-sm-6">
 
-## [Guido Molaro](guido.molaro@ing.austral.edu.ar)
+## [Guido Molaro](mailto:guido.molaro@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
 ###
 ###
 
-## [Juan Manuel Perez Menendez](juanmanuel.perezmenendez@ing.austral.edu.ar)
+## [Juan Manuel Perez Menendez](mailto:juanmanuel.perezmenendez@ing.austral.edu.ar)
 ### **Software engineering student**
 
 </a>
