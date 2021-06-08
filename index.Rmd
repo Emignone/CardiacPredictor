@@ -54,16 +54,16 @@ sexPercentages
 library(plotly)
   feyUnder40 = subset(dataset,dataset$FEY<40)
   feyHistogram <- plot_ly(type='histogram',x= feyUnder40$FEY, name = "SEVERE", marker = 
-                       list(color= "red",line=list(color="darkgray",width=0.0))
+                       list(color= "#91AAF2",line=list(color="darkgray",width=0.0))
                      ,nbinsx=5)
   feyBtw41_49 = subset(dataset,dataset$FEY>=41 & dataset$FEY<=49)
   feyOver50 = subset(dataset,dataset$FEY>50)
   feyHistogram <- feyHistogram %>% add_histogram(x=feyBtw41_49$FEY, name = "LIMIT", marker = 
-                                         list(color= "yellow",
+                                         list(color= "#546FBF",
                                               line=list(color="darkgray",width=0.0))
                                        ,nbinsx=3)
   feyHistogram <- feyHistogram %>% add_histogram(x=feyOver50$FEY, name = "NORMAL", marker = 
-                                         list(color= "green",
+                                         list(color= "#002E3E",
                                               line=list(color="darkgray",width=0.0))
                                        ,nbinsx=10)
   feyHistogram <- feyHistogram %>% layout(barmode = "overlay", 

@@ -156,36 +156,24 @@ feySevPie
 ***
 
 ```{r echo=FALSE}
-personasMayoresa60Hombres<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "MASC")
-personasMayores60ConAngioplastiaHombres<- subset(personasMayoresa60Hombres, personasMayoresa60Hombres$PROCEDIMIENTO == "ANGIOPLASTIA")
-complicacionesAngioplastiaMayores60Hombres <- table(personasMayores60ConAngioplastiaHombres$COMPLICACIONES.ANGIOPLASTIA)
-personasMayores60ConCirugiaHombres <- subset(personasMayoresa60Hombres, personasMayoresa60Hombres$PROCEDIMIENTO == "CIRUGIA")
-complicacionesCirugiaMayores60INMEDIATASHombres <- table(personasMayores60ConCirugiaHombres$COMPLICACIONES.INMEDIATAS)
-complicacionesCirugiaMayores60TARDIASHombres <- table(personasMayores60ConCirugiaHombres$COMPLICACIONES.TARDIAS)
-
-
-complicacionesAngioplastia1 <- sum(personasMayores60ConAngioplastiaHombres$COMPLICACIONES.ANGIOPLASTIA == 1)
-complicacionesAngioplastia0 <- sum(personasMayores60ConAngioplastiaHombres$COMPLICACIONES.ANGIOPLASTIA== 0)
-complicacionesCirugiaInmediata1 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.INMEDIATAS == 1) 
-complicacionesCirugiaInmediata0 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.INMEDIATAS == 0)
-complicacionesCirugiaTardia1 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.TARDIAS == 1)
-complicacionesCirugiaTardia0 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.TARDIAS == 0)
+menOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "MASC")
+menOlderThan60WithAngioplasty<- subset(menOlderThan60, menOlderThan60$PROCEDIMIENTO == "ANGIOPLASTIA")
+menOlderThan60WithSurgery <- subset(menOlderThan60, menOlderThan60$PROCEDIMIENTO == "CIRUGIA")
 
 library(plotly)
 library(ggplot2)
-x <- c("Angioplasty Complications", "Immediate Surgery Complications", "Late Surgery Complications")
-y1 <- c(complicacionesAngioplastia0, complicacionesCirugiaInmediata0, complicacionesCirugiaTardia0)
-y2<- c(complicacionesAngioplastia1, complicacionesCirugiaInmediata1, complicacionesCirugiaInmediata1)
-data2 <- data.frame(x, y1, y2)
+x <- c("Angioplasty", "Surgery - Immediate", "Surgery- Late")
+y1 <- c(sum(menOlderThan60WithAngioplasty$COMPLICACIONES.ANGIOPLASTIA== 0), sum(menOlderThan60WithSurgery$COMPLICACIONES.INMEDIATAS == 0), sum(menOlderThan60WithSurgery$COMPLICACIONES.TARDIAS == 0) )
+y2<- c(sum(menOlderThan60WithAngioplasty$COMPLICACIONES.ANGIOPLASTIA == 1), sum(menOlderThan60WithSurgery$COMPLICACIONES.INMEDIATAS == 1), sum(menOlderThan60WithSurgery$COMPLICACIONES.TARDIAS == 1))
+data <- data.frame(x, y1, y2)
 
-data2$x <- factor(data2$x, levels = data2[["x"]])
-fig6 <- plot_ly(data2, x = ~x, y = ~y1, type = 'bar', name = 'Without Complications', marker = list(color = '#1f63b4'))
-fig6 <- fig6 %>% add_trace(y = ~y2, name = 'With Complications', marker = list(color = '#d60409'))
-fig6 <- fig6 %>% layout(xaxis = list(title = "", tickangle = 0),
+complicationsInMenOlderThan60 <- plot_ly(data, x = ~x, y = ~y1, type = 'bar', name = 'Without Complications', marker = list(color = '#546FBF'))
+complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% add_trace(y = ~y2, name = 'With Complications', marker = list(color = '#F24B4B'))
+complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% layout(xaxis = list(title = "", tickangle = 0),
                       yaxis = list(title = ""),
                       margin = list(b = 100),
                       barmode = 'group')
-fig6
+complicationsInMenOlderThan60
 ```
 
 # Women older than 60 years whose reason for admission was valve programming and went to surgery
