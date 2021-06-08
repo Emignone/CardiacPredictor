@@ -11,114 +11,308 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+library(knitr)
+library(ggplot2)
+library(plotly)
 knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+knitr::opts_chunk$set(error = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
-
-
-# My first post
-
-2018 | 7 | 23 Last compiled: `r Sys.Date()`
-
-Notice that whatever you define as a top level header, automatically gets put into the table of contents bar on the left. 
-
-## Second level header
-
-You can add more headers by adding more hashtags. These won't be put into the table of contents
-
-### third level header
-
-Here's an even lower level header
-
-# My second post (note the order)
-
-2018 | 7 | 23 Last compiled: `r Sys.Date()`
-
-I'm writing this tutorial going from the top down. And, this is how it will be printed. So, notice the second post is second in the list. If you want your most recent post to be at the top, then make a new post starting at the top. If you want the oldest first, do, then keep adding to the bottom
-
-# Adding R stuff
-
-So far this is just a blog where you can write in plain text and serve your writing to a webpage. One of the main purposes of this lab journal is to record your progress learning R. The reason I am asking you to use this process is because you can both make a website, and a lab journal, and learn R all in R-studio. This makes everything really convenient and in the sam place. 
-
-So, let's say you are learning how to make a histogram in R. For example, maybe you want to sample 100 numbers from a normal distribution with mean = 0, and standard deviation =1, and then you want to plot a histogram. You can do this right here by using an r code block, like this:
 
 ```{r}
-samples <- rnorm(100, mean=0, sd=1)
-hist(samples)
+dataset <- read.csv("LabJournalWebsite/dataset.csv", sep=";")
 ```
 
-When you knit this R Markdown document, you will see that the histogram is printed to the page, along with the R code. This document can be set up to hide the R code in the webpage, just delete the comment (hashtag), from the cold folding option in the yaml header up top. For purposes of letting yourself see the code, and me see the code, best to keep it the way that it is. You learn all of these things and more can be customized in each R code block.
 
-# The big idea
+#Number of injuries of people who went to angioplasty 
+***
+The number of injuries in the different blood vessels is important since both this and the injured vessels determine the complexity of the surgery and therefore the choice of procedure
 
-Use this lab journal to record what you do in R. This way I will be able to see what you are doing and help you along the way. You will also be creating a repository of all the things you do. You can make posts about everything. Learning specific things in R (project unrelated), and doing things for the project that we will discuss at the beginning of the Fall semester. You can get started now by fiddling around with googling things, and trying stuff out in R. I've placed some helpful starting links in the links page on this website
+```{r echo=FALSE, paged.print=False}
+patientsWithAngioplasty <- subset(dataset,dataset$PROCEDIMIENTO == "ANGIOPLASTIA")
+#numero0 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==0)
+#numero1 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==1)
+#numero2 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==2)
+#numero3 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==3)
+#numero4 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==4)
+zeroInjuries <- 12
+oneInjury <- 78
+twoInjuries <- 79
+threeInjuries <- 25
+fourInjuries <- 6
+library(plotly)
+library(ggplot2)
+x <- c('0', '1', '2', '3', '4')
+y <- c(zeroInjuries, oneInjury, twoInjuries, threeInjuries, fourInjuries)
+data <- data.frame(x, y)
 
-# What can you do right now by yourself?
+fig <- plot_ly(data, x = ~x, y = ~y, type = 'bar',
+             text = y, textposition = 'auto',
+             marker = list(color = '#546FBF',
+                           line = list(color = '#546FBF', width = 1.5)))
+fig <- fig %>% layout(title = "",
+         xaxis = list(title = "Number of Injuries"),
+         yaxis = list(title = "Number of Patients"))
 
-It's hard to learn programming when you don't have specific problems that you are trying to solve. Everything just seems abstract.
+fig
+```
 
-I wrote an [introductory programming book that introduces R](https://crumplab.github.io/programmingforpsych/), and gives some [concrete problems for you to solve](https://crumplab.github.io/programmingforpsych/programming-challenges-i-learning-the-fundamentals.html). 
 
-To get the hang of journaling and solving the problems to learn programming, my suggestion is that you use this .Rmd file to solve the problems. It would look like this:
 
-# Problem 1
+# Extracorporeal circulation
+***
 
-Do simple math with numbers, addition, subtraction, multiplication, division
+Risk of immediate complications on patients who underwent surgery and doctors need to use extracorporeal circulation compared to those who did not have extracorporeal circulation. Extracorporeal circulation refers to the circulation of blood outside of the body through a machine that temporarily assumes an organ's functions (eg. heart and lungs).
+```{r echo=FALSE}
+CEC<-subset(dataset,dataset$CIRCULACION.EXTRACORPOREA!="NO")
+CECNO<-subset(dataset,dataset$CIRCULACION.EXTRACORPOREA=="NO")
+immediateComplicationsCEC<-sum(CEC$COMPLICACIONES.INMEDIATAS == 1)
+noimmediateComplicationsCEC <-sum(CEC$COMPLICACIONES.INMEDIATAS == 0)
+immediateComplicationsCECNO <-sum(CECNO$COMPLICACIONES.INMEDIATAS == 1)
+noimmediateComplicationsCECNO <-sum(CECNO$COMPLICACIONES.INMEDIATAS == 0)
+library(plotly)
 
-```{r}
-1+2
-2*5
-5/3
-(1+6+4)/5
+x <- c('CEC', 'Without CEC')
+y <- c(immediateComplicationsCEC,immediateComplicationsCECNO)
+y2 <- c(noimmediateComplicationsCEC,noimmediateComplicationsCECNO)
+data <- data.frame(x, y, y2)
+
+immediateComplicationsAndCEC <- data %>% plot_ly()
+immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% add_trace(x = ~x, y = ~y, type = 'bar',
+                         name = 'With Complications',
+                         text = y, textposition = 'auto',
+                         marker = list(color = '#F24B4B',
+                                       line = list(color = '#F24B4B', width = 1.5)))
+immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% add_trace(x = ~x, y = ~y2, type = 'bar',
+                         name = 'Without Complications',
+                         text = y2, textposition = 'auto',
+                         marker = list(color = '#546FBF',
+                                       line = list(color = '#546FBF', width = 1.5)))
+immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% layout(title = "Immediate Complications in Pacients with and without CEC",
+                      barmode = 'group',
+                      xaxis = list(title = ""),
+                      yaxis = list(title = "Number of Patients"))
+
+immediateComplicationsAndCEC
+```
+
+
+
+# Hyperlactic patients with Post-Op Complications
+***
+
+Hyperlactatemia is the elevated quantity of lactate in blood. While a normal blood lactate level is between 0-2mmol/L, a patient with hyperlactatemia has a level above 3-5mmol/L. When this alteration arises in the operating room or very early in the ICU (early-onset hyperlactatemia), it is strongly associated with adverse outcomes and complications, while late-onset (6-12h in the ICU) is a benign alteration that spontaneously resolves itself within 24 hours. 
+Between the 53 early-onset hyperlactic patients in surgery, 28 of them had complications.
+
+
+```{r echo=FALSE}
+library(plotly)
+hyperLact <- subset(dataset,dataset$LACTICO.POP>=3)
+complicsHyperLact <- subset(hyperLact,hyperLact$COMPLICACIONES.INMEDIATAS==1 | hyperLact$COMPLICACIONES.TARDIAS==1)
+hyperLactCir <- subset(hyperLact,hyperLact$PROCEDIMIENTO=="CIRUGIA")
+hyperlactCirCompli <- round(sum(hyperLactCir$COMPLICACIONES.INMEDIATAS==1 | hyperLactCir$COMPLICACIONES.TARDIAS==1)/length(hyperLactCir$COMPLICACIONES.INMEDIATAS)*100)
+hyperLactCirNorm <- round(sum(hyperLactCir$COMPLICACIONES.INMEDIATAS==0 & hyperLactCir$COMPLICACIONES.TARDIAS==0)/length(hyperLactCir$COMPLICACIONES.INMEDIATAS)*100)
+hyperLactPieval<- c(hyperLactCirNorm,hyperlactCirCompli)
+hyperLactpielabels<- c(paste("Without: ",hyperLactCirNorm,"%"),paste("With: ",hyperlactCirCompli,"%"))
+
+hyperLactPie <- plot_ly(type = 'pie',
+                        labels = hyperLactpielabels,
+                        values = hyperLactPieval,
+                        textinfo = 'label',
+                        insidetextorientation ='radial',
+                        marker = list(colors = c("#546FBF","#F24B4B")),
+                        title = "Complications in Hyperlactic patients"
+                        )
+      
+hyperLactPie
+```
+
+# Patients with severe LVEF values with Post-Op complications
+***
+Many studies have shown that LVEF values have relation with Post-Op surgery complications. Between the 11 patients in surgery with severe LVEF values, 7 of them had complications.
+
+```{r echo=FALSE}
+library(plotly)
+severeFey <- subset(dataset,dataset$FEY<=40)
+severeFeySurgery <- subset(severeFey,severeFey$PROCEDIMIENTO=="CIRUGIA")
+severeFeySurgeryComplications <- round(sum(severeFeySurgery$COMPLICACIONES.INMEDIATAS==1)/length(severeFeySurgery$COMPLICACIONES.INMEDIATAS)*100)
+severeFeySurgeryNOComplications <- round(sum(severeFeySurgery$COMPLICACIONES.INMEDIATAS==0)/length(severeFeySurgery$COMPLICACIONES.INMEDIATAS)*100)
+FeySevPieval<- c(severeFeySurgeryNOComplications,severeFeySurgeryComplications)
+FeySevPielabels<- c(paste("Without: ",severeFeySurgeryNOComplications,"%"),paste("With: ",severeFeySurgeryComplications,"%"))
+feySevPie <- plot_ly(type = 'pie', 
+                     labels = FeySevPielabels, 
+                     values = FeySevPieval,
+                     textinfo='label',
+                     insidetextorientation='radial',
+                     marker = list(colors = c("#546FBF","#F24B4B")),
+                     title = ""
+                     )
+feySevPie
+```
+
+# Difference between angioplasty complications and surgical complications in men older than 60 years (late and immediate)
+
+***
+
+```{r echo=FALSE}
+personasMayoresa60Hombres<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "MASC")
+personasMayores60ConAngioplastiaHombres<- subset(personasMayoresa60Hombres, personasMayoresa60Hombres$PROCEDIMIENTO == "ANGIOPLASTIA")
+complicacionesAngioplastiaMayores60Hombres <- table(personasMayores60ConAngioplastiaHombres$COMPLICACIONES.ANGIOPLASTIA)
+personasMayores60ConCirugiaHombres <- subset(personasMayoresa60Hombres, personasMayoresa60Hombres$PROCEDIMIENTO == "CIRUGIA")
+complicacionesCirugiaMayores60INMEDIATASHombres <- table(personasMayores60ConCirugiaHombres$COMPLICACIONES.INMEDIATAS)
+complicacionesCirugiaMayores60TARDIASHombres <- table(personasMayores60ConCirugiaHombres$COMPLICACIONES.TARDIAS)
+
+
+complicacionesAngioplastia1 <- sum(personasMayores60ConAngioplastiaHombres$COMPLICACIONES.ANGIOPLASTIA == 1)
+complicacionesAngioplastia0 <- sum(personasMayores60ConAngioplastiaHombres$COMPLICACIONES.ANGIOPLASTIA== 0)
+complicacionesCirugiaInmediata1 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.INMEDIATAS == 1) 
+complicacionesCirugiaInmediata0 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.INMEDIATAS == 0)
+complicacionesCirugiaTardia1 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.TARDIAS == 1)
+complicacionesCirugiaTardia0 <- sum(personasMayores60ConCirugiaHombres$COMPLICACIONES.TARDIAS == 0)
+
+library(plotly)
+library(ggplot2)
+x <- c("Angioplasty Complications", "Immediate Surgery Complications", "Late Surgery Complications")
+y1 <- c(complicacionesAngioplastia0, complicacionesCirugiaInmediata0, complicacionesCirugiaTardia0)
+y2<- c(complicacionesAngioplastia1, complicacionesCirugiaInmediata1, complicacionesCirugiaInmediata1)
+data2 <- data.frame(x, y1, y2)
+
+data2$x <- factor(data2$x, levels = data2[["x"]])
+fig6 <- plot_ly(data2, x = ~x, y = ~y1, type = 'bar', name = 'Without Complications', marker = list(color = '#1f63b4'))
+fig6 <- fig6 %>% add_trace(y = ~y2, name = 'With Complications', marker = list(color = '#d60409'))
+fig6 <- fig6 %>% layout(xaxis = list(title = "", tickangle = 0),
+                      yaxis = list(title = ""),
+                      margin = list(b = 100),
+                      barmode = 'group')
+fig6
+```
+
+# Women older than 60 years whose reason for admission was valve programming and went to surgery
+***
+
+
+```{r echo=FALSE}
+surgeryInWomenOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "FEME" & dataset$PROCEDIMIENTO== "CIRUGIA")
+progValv <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "PROG VALV")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100, 2)
+progCoronary <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "PROG CORONARIO")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100,2)
+others <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "ANEURISMA AO")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100,2)
+
+library(ggplot2)
+library(plotly)
+dataEntryToHospital <- c(progValv, progCoronary, others)
+
+entryWomenOlderThan60ForSurgery <- plot_ly(type = 'pie', 
+                     labels = c("Valve Prog", "Coronary Prog", "Others"), 
+                     values = dataEntryToHospital,
+                     textinfo='label',
+                     insidetextorientation='radial',
+                     marker = list(colors = c("#546FBF","#F24B4B", "#D0D9F2")),
+                     title = "Complications in LFEV patients"
+                     )
+entryWomenOlderThan60ForSurgery
 
 ```
 
-# Problem 2
+# Morbidly obese male patients and their procedures
 
-Put numbers into variables, do simple math on the variables
+***
 
-```{r}
-a<-1
-b<-2
-a+b
+```{r echo=FALSE}
+library(plotly)
+morbidObesity <- subset(dataset,dataset$OBESIDAD.MORBIDA == 1)
+labels = c('ANGIOPLASTY','SURGERY','ENDOVALVE')
+values = c(sum(morbidObesity$PROCEDIMIENTO == "ANGIOPLASTIA"), sum(morbidObesity$PROCEDIMIENTO == "CIRUGIA"), sum(morbidObesity$PROCEDIMIENTO == "ENDOVALVULA"))
 
-d<-c(1,2,3)
-e<-c(5,6,7)
-d+e
-d*e
-d/e
-
+morbidObesityAndProcedures <- plot_ly(type='pie', labels=labels, values=values, 
+               textinfo='label+percent',
+               marker = list(colors = c("#546FBF","#F24B4B", "#D0D9F2")),
+               insidetextorientation='radial')
+morbidObesityAndProcedures
 ```
 
-# Problem 3
+# Analysis of the immediate and late complications of each type of open heart surgery
 
-Write code that will place the numbers 1 to 100 separately into a variable using for loop. Then, again using the seq function.
+***
+```{r echo=FALSE}
+library(plotly)
 
-```{r}
-# for loop solution
-# i becomes the number 1 to 100 at each step of the loop
+CRM_PURE<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="CRM PURA")
+immediateComplicationsCRM_PURE<-round(sum(CRM_PURE$COMPLICACIONES.INMEDIATAS == 1)/length(CRM_PURE)*100, digits=2)
+lateComplicationsCRM_PURE<-round(sum(CRM_PURE$COMPLICACIONES.TARDIAS == 1)/length(CRM_PURE)*100, digits=2)
 
+RVAO<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="RVAO")
+immediateComplicationsRVAO<-round(sum(RVAO$COMPLICACIONES.INMEDIATAS == 1)/length(RVAO)*100, digits=2)
+lateComplicationsRVAO<-round(sum(RVAO$COMPLICACIONES.TARDIAS == 1)/length(RVAO)*100, digits=2)
 
-a <- length(100) # make empty variable, set length to 100
-for (i in 1:100){
-  a[i] <-i #assigns the number in i, to the ith index of a
-}
+mitralPlastic<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="PLASTICA MITRAL")
+immediateComplicationsMitralPlastic<-round(sum(mitralPlastic$COMPLICACIONES.INMEDIATAS == 1)/length(mitralPlastic)*100, digits=2)
+lateComplicationsMitralPlastic<-round(sum(mitralPlastic$COMPLICACIONES.TARDIAS == 1)/length(mitralPlastic)*100, digits=2)
 
-print(a)
+RVAo_Aorta<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="RVAo + Aorta")
+immediateComplicationsRVAo_Aorta<-round(sum(RVAo_Aorta$COMPLICACIONES.INMEDIATAS == 1)/length(RVAo_Aorta)*100, digits=2)
+lateComplicationsRVAo_Aorta<-round(sum(RVAo_Aorta$COMPLICACIONES.TARDIAS == 1)/length(RVAo_Aorta)*100, digits=2)
 
-# for loop solution #2
+x <- c('CRM PURA', 'RVAO', 'PLÁSTICA MITRAL', 'RVAo + Aorta')#nombres de c.
+y <- c(immediateComplicationsCRM_PURE, immediateComplicationsRVAO,immediateComplicationsMitralPlastic, immediateComplicationsRVAo_Aorta)
+y2 <- c(lateComplicationsCRM_PURE,lateComplicationsRVAO,lateComplicationsMitralPlastic, lateComplicationsRVAo_Aorta)
+data <- data.frame(x, y)
 
-a<-c() #create empty variable using combine command
-for (i in 1:100){
-  a<-c(a,i) # keeps combining a with itself and the new number in i
-}
-print(a)
+complicationsInSurgery<- data %>% plot_ly()
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y, type = 'bar',
+                         name = 'Immediate Complications',#inmediatas
+                         text = y, textposition = 'auto',
+                         marker = list(color = '#F24B4B',
+                                       line = list(color = '#F24B4B', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, type = 'bar',
+                         name = 'Late Complications',#tardias
+                         text = y2, textposition = 'auto',
+                         marker = list(color = '#546FBF',
+                                       line = list(color = '#546FBF', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% layout(title = "Immediate and Late Complications in Pacients with different types of surgery",
+                      barmode = 'group',
+                      xaxis = list(title = ""),
+                      yaxis = list(title = "% of Complications"))
 
-# seq solution
-a <- seq(1,100,1) # look up help for seq using ?seq() in console
-print(a)
-
+complicationsInSurgery
 ```
 
-# Replace this with problem 4
+# Previous angioplasty patients who had a re-angioplasty
+***
+We found that many patients who had undergone an angioplasty, had had another one. The cause for this phenomenon may be that the arteries are blocked or obstructed again (it could be the same or other arteries) which is not a rare risk of a first angioplasty.
 
-And keep going. Try to solve the problems with different scripts that provide the same solution. Good luck, Happy coding.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(tidyr)
+previousInterventionAngioplasty <- subset(dataset, dataset$INTERVENCION.PREVIA=="ANGIOPLASTIA")
+moreThan1Angioplasty <- sum(previousInterventionAngioplasty$PROCEDIMIENTO == "ANGIOPLASTIA")
+only1Angioplasty <- sum(previousInterventionAngioplasty$PROCEDIMIENTO != "ANGIOPLASTIA")
+dataset2 <- dataset
+dataset2$INTERVENCION.PREVIA <- replace_na("T")
+firstAngio <- sum(dataset2$INTERVENCION.PREVIA!="ANGIOPLASTIA" & dataset2$PROCEDIMIENTO=="ANGIOPLASTIA")
+noAngio <- sum(dataset2$INTERVENCION.PREVIA!="ANGIOPLASTIA" & dataset2$PROCEDIMIENTO!="ANGIOPLASTIA")
+library(plotly)
+x <- c('Prev: Angioplasty', 'Prev: Others')
+y <- c(moreThan1Angioplasty,firstAngio)
+y2 <- c(only1Angioplasty,noAngio)
+data <- data.frame(x, y, y2)
+
+angioplasties<- data %>% plot_ly()
+angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y, type = 'bar',
+                         name = 'Angioplasty',
+                         text = y, textposition = 'auto',
+                         marker = list(color = '#F24B4B',
+                                       line = list(color = '#F24B4B', width = 1.5)))
+angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y2, type = 'bar',
+                         name = 'Different Procedure',
+                         text = y2, textposition = 'auto',
+                         marker = list(color = '#546FBF',
+                                       line = list(color = '#546FBF', width = 1.5)))
+angioplasties <- angioplasties %>% layout(title = "Angioplasty frequency depending on previous procedure",
+                      barmode = 'group',
+                      xaxis = list(title = ""),
+                      yaxis = list(title = "Number of Patients"))
+
+angioplasties
+```
+

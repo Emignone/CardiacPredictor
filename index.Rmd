@@ -100,7 +100,7 @@ procedureInDiabetics
 
 ### **Morbly obese Men**
 
-***
+*** 
 ```{r echo=FALSE}
 library(ggplot2)
 men <- subset(dataset, dataset$SEXO=="MASC")
