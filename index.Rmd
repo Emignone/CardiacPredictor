@@ -4,8 +4,9 @@ output: html_document
 ---
 ```{r setup, include=FALSE}
 library(knitr)
-#library(ggplot2)
-knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(plotly)
+knitr::opts_chunk$set(error = FALSE, echo = FALSE)
 knitr::opts_knit$set(root.dir= normalizePath('..'))
 knitr::opts_chunk$set(error = FALSE)
 knitr::opts_chunk$set(echo = TRUE)
@@ -32,8 +33,9 @@ We started by researching on the subject and becoming familiar with the differen
 
 ### **Gender**
 
+***
+
 ```{r echo=FALSE}
-library(plotly)
 
 labels = c('WOMEN','MEN')
 values = c(sum(dataset$SEXO=="FEME"), sum(dataset$SEXO=="MASC"))
@@ -46,7 +48,9 @@ sexPercentages
 ```
 
 
-### **Fey**
+### **Abnormal Fey**
+
+***
 
 ```{r echo=FALSE}
 library(plotly)
@@ -54,7 +58,6 @@ library(plotly)
   feyHistogram <- plot_ly(type='histogram',x= feyUnder40$FEY, name = "SEVERE", marker = 
                        list(color= "red",line=list(color="darkgray",width=0.0))
                      ,nbinsx=5)
-  feyHistogram
   feyBtw41_49 = subset(dataset,dataset$FEY>=41 & dataset$FEY<=49)
   feyOver50 = subset(dataset,dataset$FEY>50)
   feyHistogram <- feyHistogram %>% add_histogram(x=feyBtw41_49$FEY, name = "LIMIT", marker = 
@@ -74,6 +77,7 @@ library(plotly)
 
 ### **Surgery in Diabetic patients**
 
+***
 # 
 
 It has been proven that diabetes is a significant factor when it comes to cardiology. We as a team decided to know which procedures do diabetic patients have, as to provide a deeper insight to the dataset
@@ -94,6 +98,21 @@ procedureInDiabetics
 ```
 
 
+### **Morbly obese Men**
+
+***
+```{r echo=FALSE}
+library(ggplot2)
+men <- subset(dataset, dataset$SEXO=="MASC")
+labels = c("Men with Obesity", "Men without Obesity")
+values = c(sum(men$OBESIDAD.MORBIDA == 1), sum(men$OBESIDAD.MORBIDA == 0))
+menMorbidObesity<-plot_ly(type='pie', labels=labels, values=values, 
+               textinfo='label+percent',
+               insidetextorientation='radial',
+               marker =list(colors =  c("#F24B4B","#546FBF"))
+               )
+menMorbidObesity
+```
 
 
 
