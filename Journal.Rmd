@@ -29,7 +29,7 @@ dataset <- read.csv("LabJournalWebsite/dataset.csv", sep=";")
 ***
 The number of injuries in the different blood vessels is important since both this and the injured vessels determine the complexity of the surgery and therefore the choice of procedure
 
-```{r echo=FALSE, paged.print=False}
+```{r echo=FALSE}
 patientsWithAngioplasty <- subset(dataset,dataset$PROCEDIMIENTO == "ANGIOPLASTIA")
 #numero0 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==0)
 #numero1 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==1)
@@ -282,7 +282,7 @@ complicationsInSurgery
 We found that many patients who had undergone an angioplasty, had had another one. The cause for this phenomenon may be that the arteries are blocked or obstructed again (it could be the same or other arteries) which is not a rare risk of a first angioplasty.
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r echo=FALSE}
 library(tidyr)
 previousInterventionAngioplasty <- subset(dataset, dataset$INTERVENCION.PREVIA=="ANGIOPLASTIA")
 moreThan1Angioplasty <- sum(previousInterventionAngioplasty$PROCEDIMIENTO == "ANGIOPLASTIA")
