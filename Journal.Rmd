@@ -25,7 +25,7 @@ dataset <- read.csv("LabJournalWebsite/dataset.csv", sep=";")
 ```
 
 
-#Number of injuries of people who went to angioplasty 
+# Number of injuries of people who went to angioplasty 
 ***
 The number of injuries in the different blood vessels is important since both this and the injured vessels determine the complexity of the surgery and therefore the choice of procedure
 
