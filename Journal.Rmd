@@ -23,40 +23,159 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r echo=FALSE}
 dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 ```
-<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#003A7D">
+<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#2093C3">
     <u>
     Data Interpretation
     </u>
 </p>
 <p><br></p>
-# Injuries in Angioplasty
+# Diabetic patients and coronary programmed 
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-The number of injuries in the different blood vessels of the patients is important since both this and the injured vessels determine the complexity of the surgery and therefore the choice of procedure.
 </p>
 ```{r echo=FALSE}
-patientsWithAngioplasty <- subset(dataset,dataset$PROCEDIMIENTO == "ANGIOPLASTIA")
+diabetics <- sum(dataset$DIABETES == 1)
+coronary <- sum(dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
+subsetCoronary <- subset(dataset,dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
+crossedArea <- sum(subsetCoronary$DIABETES == 1)
+library("VennDiagram") 
+grid.newpage()
+g = draw.pairwise.venn(area1 = diabetics,
+                   area2 = coronary,
+                   cross.area = crossedArea,
+                   category = c("Programmed Coronary", "Diabetic Patients"),
+                   fill = c("#8ACBDE","#F86F6F"),
+                   lty = "blank",
+                   inverted = TRUE)
+```
 
-zeroInjuries <- 12
-oneInjury <- 78
-twoInjuries <- 79
-threeInjuries <- 25
-fourInjuries <- 6
-library(plotly)
+# Female patients older than 60 years whose reason for admission was valve programming and had an open heart surgery
+
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
+```{r echo=FALSE}
+surgeryInWomenOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "FEME" & dataset$PROCEDIMIENTO== "CIRUGIA")
+progValv <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "PROG VALV")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100, 2)
+progCoronary <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "PROG CORONARIO")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100,2)
+others <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "ANEURISMA AO")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100,2)
+
 library(ggplot2)
-x <- c('0', '1', '2', '3', '4')
-y <- c(zeroInjuries, oneInjury, twoInjuries, threeInjuries, fourInjuries)
+library(plotly)
+dataEntryToHospital <- c(progValv, progCoronary, others)
+
+entryWomenOlderThan60ForSurgery <- plot_ly(type = 'pie', 
+                     labels = c("Valve Prog", "Coronary Prog", "Others"), 
+                     values = dataEntryToHospital,
+                     textinfo='label',
+                     insidetextorientation='radial',
+                     marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
+                     title = ""
+                     )
+entryWomenOlderThan60ForSurgery
+```
+# Procedures in male patients with morbid obesity
+***
+<p style="font-family: Georgia, serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
+```{r echo=FALSE}
+library(plotly)
+morbidObesity <- subset(dataset,dataset$OBESIDAD.MORBIDA == 1)
+labels = c('ANGIOPLASTY','SURGERY','ENDOVALVE')
+values = c(sum(morbidObesity$PROCEDIMIENTO == "ANGIOPLASTIA"), sum(morbidObesity$PROCEDIMIENTO == "CIRUGIA"), sum(morbidObesity$PROCEDIMIENTO == "ENDOVALVULA"))
+
+morbidObesityAndProcedures <- plot_ly(type='pie', labels=labels, values=values, 
+               textinfo='label+percent',
+               marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
+               insidetextorientation='radial')
+morbidObesityAndProcedures
+```
+
+
+# Previous angioplasty patients who had a second angioplasty
+
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    Many patients who had undergone an angioplasty, had had another one performed on them before, according to our dataset. The cause for this phenomenon may be that the arteries are blocked or obstructed again (it could be the same or other arteries) which is not a rare risk of a first angioplasty.
+</p>
+```{r echo=FALSE}
+library(tidyr)
+previousInterventionAngioplasty <- subset(dataset, dataset$INTERVENCION.PREVIA=="ANGIOPLASTIA")
+moreThan1Angioplasty <- sum(previousInterventionAngioplasty$PROCEDIMIENTO == "ANGIOPLASTIA")
+only1Angioplasty <- sum(previousInterventionAngioplasty$PROCEDIMIENTO != "ANGIOPLASTIA")
+dataset2 <- dataset
+dataset2$INTERVENCION.PREVIA <- replace_na("T")
+firstAngio <- sum(dataset2$INTERVENCION.PREVIA!="ANGIOPLASTIA" & dataset2$PROCEDIMIENTO=="ANGIOPLASTIA")
+noAngio <- sum(dataset2$INTERVENCION.PREVIA!="ANGIOPLASTIA" & dataset2$PROCEDIMIENTO!="ANGIOPLASTIA")
+library(plotly)
+x <- c('Prev: Angioplasty', 'Prev: Others')
+y <- c(moreThan1Angioplasty,firstAngio)
+y2 <- c(only1Angioplasty,noAngio)
+data <- data.frame(x, y, y2)
+
+angioplasties<- data %>% plot_ly()
+angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y, type = 'bar',
+                         name = 'Angioplasty',
+                         text = y, textposition = 'auto',
+                         marker = list(color = '#003A7D',
+                                       line = list(color = '#003A7D', width = 1.5)))
+angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y2, type = 'bar',
+                         name = 'Different Procedure',
+                         text = y2, textposition = 'auto',
+                         marker = list(color = '#8ACBDE',
+                                       line = list(color = '#8ACBDE', width = 1.5)))
+angioplasties <- angioplasties %>% layout(title = "",
+                      barmode = 'group',
+                      xaxis = list(title = ""),
+                      yaxis = list(title = "Number of Patients"))
+
+angioplasties
+```
+# Immediate and late complications in open heart surgery
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
+```{r echo=FALSE}
+library(plotly)
+
+CRM_PURE<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="CRM PURA")
+immediateComplicationsCRM_PURE<-round(sum(CRM_PURE$COMPLICACIONES.INMEDIATAS == 1)/length(CRM_PURE)*100, digits=2)
+lateComplicationsCRM_PURE<-round(sum(CRM_PURE$COMPLICACIONES.TARDIAS == 1)/length(CRM_PURE)*100, digits=2)
+
+RVAO<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="RVAO")
+immediateComplicationsRVAO<-round(sum(RVAO$COMPLICACIONES.INMEDIATAS == 1)/length(RVAO)*100, digits=2)
+lateComplicationsRVAO<-round(sum(RVAO$COMPLICACIONES.TARDIAS == 1)/length(RVAO)*100, digits=2)
+
+mitralPlastic<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="PLASTICA MITRAL")
+immediateComplicationsMitralPlastic<-round(sum(mitralPlastic$COMPLICACIONES.INMEDIATAS == 1)/length(mitralPlastic)*100, digits=2)
+lateComplicationsMitralPlastic<-round(sum(mitralPlastic$COMPLICACIONES.TARDIAS == 1)/length(mitralPlastic)*100, digits=2)
+
+RVAo_Aorta<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="RVAo + Aorta")
+immediateComplicationsRVAo_Aorta<-round(sum(RVAo_Aorta$COMPLICACIONES.INMEDIATAS == 1)/length(RVAo_Aorta)*100, digits=2)
+lateComplicationsRVAo_Aorta<-round(sum(RVAo_Aorta$COMPLICACIONES.TARDIAS == 1)/length(RVAo_Aorta)*100, digits=2)
+
+x <- c('CRM PURA', 'RVAO', 'PLÁSTICA MITRAL', 'RVAo + Aorta')#nombres de c.
+y <- c(immediateComplicationsCRM_PURE, immediateComplicationsRVAO,immediateComplicationsMitralPlastic, immediateComplicationsRVAo_Aorta)
+y2 <- c(lateComplicationsCRM_PURE,lateComplicationsRVAO,lateComplicationsMitralPlastic, lateComplicationsRVAo_Aorta)
 data <- data.frame(x, y)
 
-fig <- plot_ly(data, x = ~x, y = ~y, type = 'bar',
-             text = y, textposition = 'auto',
-             marker = list(color = '#8ACBDE',
-                           line = list(color = '#8ACBDE', width = 1.5)))
-fig <- fig %>% layout(title = "",
-         xaxis = list(title = "Number of Injuries"),
-         yaxis = list(title = "Number of Patients"))
+complicationsInSurgery<- data %>% plot_ly()
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y, type = 'bar',
+                         name = 'Immediate Complications',#inmediatas
+                         text = y, textposition = 'auto',
+                         marker = list(color = '#003A7D',
+                                       line = list(color = '#003A7D', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, type = 'bar',
+                         name = 'Late Complications',#tardias
+                         text = y2, textposition = 'auto',
+                         marker = list(color = '#8ACBDE',
+                                       line = list(color = '#8ACBDE', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
+                      barmode = 'group',
+                      xaxis = list(title = ""),
+                      yaxis = list(title = "% of Complications"))
 
-fig
+complicationsInSurgery
 ```
 # Extracorporeal circulation
 ***
@@ -152,6 +271,44 @@ feySevPie <- plot_ly(type = 'pie',
                      )
 feySevPie
 ```
+# Complications in open heart surgery patients who entered for Programmed Coronary
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
+```{r echo=FALSE}
+library(plotly)
+ProgYCirujia <- subset(dataset,dataset$MOTIVO.DE.INGRESO=="PROG CORONARIO" & dataset$PROCEDIMIENTO=="CIRUGIA") 
+
+immediateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.INMEDIATAS == 1))
+noImmediateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.INMEDIATAS == 0))
+
+
+lateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.TARDIAS == 1))
+noLateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.TARDIAS == 0))
+
+x <- c('Immediate Complications', 'Late Complications')#nombres de c.
+y <- c(immediateComplicationsProgYCirujia, lateComplicationsProgYCirujia)
+y2 <- c(noImmediateComplicationsProgYCirujia, noLateComplicationsProgYCirujia)
+data <- data.frame(x, y)
+
+complicationsInSurgery<- data %>% plot_ly()
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y, type = 'bar',
+                         name = 'Yes',#inmediatas
+                         text = y, textposition = 'auto',
+                         marker = list(color = '#F86F6F',
+                                       line = list(color = '#F86F6F', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, type = 'bar',
+                         name = 'No',#tardias
+                         text = y2, textposition = 'auto',
+                         marker = list(color = '#003A7D', 
+                                       line = list(color = '#003A7D', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
+                      barmode = 'group',
+                      xaxis = list(title = ""),
+                      yaxis = list(title = "Number of pacients"))
+
+complicationsInSurgery
+```
 # Complications in male patients older than 60 years
 ***
 <p style="font-family:Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
@@ -177,190 +334,29 @@ complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% layout(xaxis 
                       barmode = 'group')
 complicationsInMenOlderThan60
 ```
-# Female patients older than 60 years whose reason for admission was valve programming and had an open heart surgery
+# Injuries in Angioplasty
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+The number of injuries in the different blood vessels of the patients is important since both this and the injured vessels determine the complexity of the surgery and therefore the choice of procedure.
 </p>
 ```{r echo=FALSE}
-surgeryInWomenOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "FEME" & dataset$PROCEDIMIENTO== "CIRUGIA")
-progValv <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "PROG VALV")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100, 2)
-progCoronary <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "PROG CORONARIO")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100,2)
-others <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "ANEURISMA AO")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100,2)
-
+patientsWithAngioplasty <- subset(dataset,dataset$PROCEDIMIENTO == "ANGIOPLASTIA")
+zeroInjuries <- 12
+oneInjury <- 78
+twoInjuries <- 79
+threeInjuries <- 25
+fourInjuries <- 6
+library(plotly)
 library(ggplot2)
-library(plotly)
-dataEntryToHospital <- c(progValv, progCoronary, others)
-
-entryWomenOlderThan60ForSurgery <- plot_ly(type = 'pie', 
-                     labels = c("Valve Prog", "Coronary Prog", "Others"), 
-                     values = dataEntryToHospital,
-                     textinfo='label',
-                     insidetextorientation='radial',
-                     marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
-                     title = ""
-                     )
-entryWomenOlderThan60ForSurgery
-
-```
-<p style="font-family: Noto Sans, sans-serif; font-size:20pt; font-style:normal; color:#000000">
-    Procedures in male patients with morbid obesity
-</p>
-***
-<p style="font-family: Georgia, serif; font-size:13pt; font-style:normal; color:#000000">
-</p>
-```{r echo=FALSE}
-library(plotly)
-morbidObesity <- subset(dataset,dataset$OBESIDAD.MORBIDA == 1)
-labels = c('ANGIOPLASTY','SURGERY','ENDOVALVE')
-values = c(sum(morbidObesity$PROCEDIMIENTO == "ANGIOPLASTIA"), sum(morbidObesity$PROCEDIMIENTO == "CIRUGIA"), sum(morbidObesity$PROCEDIMIENTO == "ENDOVALVULA"))
-
-morbidObesityAndProcedures <- plot_ly(type='pie', labels=labels, values=values, 
-               textinfo='label+percent',
-               marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
-               insidetextorientation='radial')
-morbidObesityAndProcedures
-```
-# Immediate and late complications in open heart surgery
-***
-<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-</p>
-```{r echo=FALSE}
-library(plotly)
-
-CRM_PURE<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="CRM PURA")
-immediateComplicationsCRM_PURE<-round(sum(CRM_PURE$COMPLICACIONES.INMEDIATAS == 1)/length(CRM_PURE)*100, digits=2)
-lateComplicationsCRM_PURE<-round(sum(CRM_PURE$COMPLICACIONES.TARDIAS == 1)/length(CRM_PURE)*100, digits=2)
-
-RVAO<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="RVAO")
-immediateComplicationsRVAO<-round(sum(RVAO$COMPLICACIONES.INMEDIATAS == 1)/length(RVAO)*100, digits=2)
-lateComplicationsRVAO<-round(sum(RVAO$COMPLICACIONES.TARDIAS == 1)/length(RVAO)*100, digits=2)
-
-mitralPlastic<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="PLASTICA MITRAL")
-immediateComplicationsMitralPlastic<-round(sum(mitralPlastic$COMPLICACIONES.INMEDIATAS == 1)/length(mitralPlastic)*100, digits=2)
-lateComplicationsMitralPlastic<-round(sum(mitralPlastic$COMPLICACIONES.TARDIAS == 1)/length(mitralPlastic)*100, digits=2)
-
-RVAo_Aorta<-subset(dataset,dataset$TIPO.DE.CIRUGIA=="RVAo + Aorta")
-immediateComplicationsRVAo_Aorta<-round(sum(RVAo_Aorta$COMPLICACIONES.INMEDIATAS == 1)/length(RVAo_Aorta)*100, digits=2)
-lateComplicationsRVAo_Aorta<-round(sum(RVAo_Aorta$COMPLICACIONES.TARDIAS == 1)/length(RVAo_Aorta)*100, digits=2)
-
-x <- c('CRM PURA', 'RVAO', 'PLÁSTICA MITRAL', 'RVAo + Aorta')#nombres de c.
-y <- c(immediateComplicationsCRM_PURE, immediateComplicationsRVAO,immediateComplicationsMitralPlastic, immediateComplicationsRVAo_Aorta)
-y2 <- c(lateComplicationsCRM_PURE,lateComplicationsRVAO,lateComplicationsMitralPlastic, lateComplicationsRVAo_Aorta)
+x <- c('0', '1', '2', '3', '4')
+y <- c(zeroInjuries, oneInjury, twoInjuries, threeInjuries, fourInjuries)
 data <- data.frame(x, y)
-
-complicationsInSurgery<- data %>% plot_ly()
-complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y, type = 'bar',
-                         name = 'Immediate Complications',#inmediatas
-                         text = y, textposition = 'auto',
-                         marker = list(color = '#8ACBDE',
-                                       line = list(color = '#8ACBDE', width = 1.5)))
-complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, type = 'bar',
-                         name = 'Late Complications',#tardias
-                         text = y2, textposition = 'auto',
-                         marker = list(color = '#C5C6D0',
-                                       line = list(color = '#C5C6D0', width = 1.5)))
-complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
-                      barmode = 'group',
-                      xaxis = list(title = ""),
-                      yaxis = list(title = "% of Complications"))
-
-complicationsInSurgery
+fig <- plot_ly(data, x = ~x, y = ~y, type = 'bar',
+             text = y, textposition = 'auto',
+             marker = list(color = '#8ACBDE',
+                           line = list(color = '#8ACBDE', width = 1.5)))
+fig <- fig %>% layout(title = "",
+         xaxis = list(title = "Number of Injuries"),
+         yaxis = list(title = "Number of Patients"))
+fig
 ```
-# Previous angioplasty patients who had a second angioplasty
-***
-<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-    We found that many patients who had undergone an angioplasty, had had another one performed on them. The cause for this phenomenon may be that the arteries are blocked or obstructed again (it could be the same or other arteries) which is not a rare risk of a first angioplasty.
-</p>
-```{r echo=FALSE}
-library(tidyr)
-previousInterventionAngioplasty <- subset(dataset, dataset$INTERVENCION.PREVIA=="ANGIOPLASTIA")
-moreThan1Angioplasty <- sum(previousInterventionAngioplasty$PROCEDIMIENTO == "ANGIOPLASTIA")
-only1Angioplasty <- sum(previousInterventionAngioplasty$PROCEDIMIENTO != "ANGIOPLASTIA")
-dataset2 <- dataset
-dataset2$INTERVENCION.PREVIA <- replace_na("T")
-firstAngio <- sum(dataset2$INTERVENCION.PREVIA!="ANGIOPLASTIA" & dataset2$PROCEDIMIENTO=="ANGIOPLASTIA")
-noAngio <- sum(dataset2$INTERVENCION.PREVIA!="ANGIOPLASTIA" & dataset2$PROCEDIMIENTO!="ANGIOPLASTIA")
-library(plotly)
-x <- c('Prev: Angioplasty', 'Prev: Others')
-y <- c(moreThan1Angioplasty,firstAngio)
-y2 <- c(only1Angioplasty,noAngio)
-data <- data.frame(x, y, y2)
-
-angioplasties<- data %>% plot_ly()
-angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y, type = 'bar',
-                         name = 'Angioplasty',
-                         text = y, textposition = 'auto',
-                         marker = list(color = '#8ACBDE',
-                                       line = list(color = '#8ACBDE', width = 1.5)))
-angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y2, type = 'bar',
-                         name = 'Different Procedure',
-                         text = y2, textposition = 'auto',
-                         marker = list(color = '#C5C6D0',
-                                       line = list(color = '#C5C6D0', width = 1.5)))
-angioplasties <- angioplasties %>% layout(title = "",
-                      barmode = 'group',
-                      xaxis = list(title = ""),
-                      yaxis = list(title = "Number of Patients"))
-
-angioplasties
-```
-
-# Diabetic patients and coronary programmed 
-***
-<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-</p>
-```{r echo=FALSE}
-diabetics <- sum(dataset$DIABETES == 1)
-coronary <- sum(dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
-subsetCoronary <- subset(dataset,dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
-crossedArea <- sum(subsetCoronary$DIABETES == 1)
-library("VennDiagram") 
-grid.newpage()
-g = draw.pairwise.venn(area1 = diabetics,
-                   area2 = coronary,
-                   cross.area = crossedArea,
-                   category = c("Programmed Coronary", "Diabetic Patients"),
-                   fill = c("#8ACBDE","#F86F6F"),
-                   lty = "blank",
-                   inverted = TRUE)
-```
-# Complications in open heart surgery patients who entered for Programmed Coronary
-***
-<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-
-</p>
-```{r echo=FALSE}
-library(plotly)
-ProgYCirujia <- subset(dataset,dataset$MOTIVO.DE.INGRESO=="PROG CORONARIO" & dataset$PROCEDIMIENTO=="CIRUGIA") 
-
-immediateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.INMEDIATAS == 1))
-noImmediateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.INMEDIATAS == 0))
-
-
-lateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.TARDIAS == 1))
-noLateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.TARDIAS == 0))
-
-x <- c('Immediate Complications', 'Late Complications')#nombres de c.
-y <- c(immediateComplicationsProgYCirujia, lateComplicationsProgYCirujia)
-y2 <- c(noImmediateComplicationsProgYCirujia, noLateComplicationsProgYCirujia)
-data <- data.frame(x, y)
-
-complicationsInSurgery<- data %>% plot_ly()
-complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y, type = 'bar',
-                         name = 'Yes',#inmediatas
-                         text = y, textposition = 'auto',
-                         marker = list(color = '#003A7D',
-                                       line = list(color = '#003A7D', width = 1.5)))
-complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, type = 'bar',
-                         name = 'No',#tardias
-                         text = y2, textposition = 'auto',
-                         marker = list(color = '#8ACBDE', 
-                                       line = list(color = '#8ACBDE', width = 1.5)))
-complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
-                      barmode = 'group',
-                      xaxis = list(title = ""),
-                      yaxis = list(title = "Number of pacients"))
-
-complicationsInSurgery
-```
-
