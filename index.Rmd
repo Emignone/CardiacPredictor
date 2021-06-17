@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r include=FALSE}
-dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";")
+dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 ```
 
 
