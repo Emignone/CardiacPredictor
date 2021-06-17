@@ -6,7 +6,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#003A7D">
+<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#2093C3">
     <u>
     Authors
     </u>

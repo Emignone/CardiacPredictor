@@ -24,7 +24,7 @@ dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 We have analyzed the given dataset from different perspectives. We started by researching on the subject and becoming familiar with the different concepts and pathologies. After understanding the subject, we proceeded to apply the knowledge, both in the analysis, the interpretation and finally in the predictor of the dataset.
 </p>
 <p><br></p>
-<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#003A7D">
+<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#2093C3">
     <u>
     Data Analysis
     </u>
