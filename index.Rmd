@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r include=FALSE}
-dataset <- read.csv("LabJournalWebsite/dataset.csv", sep=";")
+dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";")
 ```
 
 
@@ -41,7 +41,7 @@ values = c(sum(dataset$SEXO=="FEME"), sum(dataset$SEXO=="MASC"))
 sexPercentages <- plot_ly(type='pie', labels=labels, values=values, 
                    textinfo='label+percent',
                    insidetextorientation='radial',
-                   marker =list(colors =  c("#F24B4B","#546FBF")))
+                   marker =list(colors =  c("#8ACBDE","#003A7D")))
 sexPercentages
 ```
 
@@ -54,16 +54,16 @@ sexPercentages
 library(plotly)
   feyUnder40 = subset(dataset,dataset$FEY<40)
   feyHistogram <- plot_ly(type='histogram',x= feyUnder40$FEY, name = "SEVERE", marker = 
-                       list(color= "#91AAF2",line=list(color="darkgray",width=0.0))
+                       list(color= "#003A7D",line=list(color="darkgray",width=0.0))
                      ,nbinsx=5)
   feyBtw41_49 = subset(dataset,dataset$FEY>=41 & dataset$FEY<=49)
   feyOver50 = subset(dataset,dataset$FEY>50)
   feyHistogram <- feyHistogram %>% add_histogram(x=feyBtw41_49$FEY, name = "LIMIT", marker = 
-                                         list(color= "#546FBF",
+                                         list(color= "#8ACBDE",
                                               line=list(color="darkgray",width=0.0))
                                        ,nbinsx=3)
   feyHistogram <- feyHistogram %>% add_histogram(x=feyOver50$FEY, name = "NORMAL", marker = 
-                                         list(color= "#002E3E",
+                                         list(color= "#C5C6D0",
                                               line=list(color="darkgray",width=0.0))
                                        ,nbinsx=10)
   feyHistogram <- feyHistogram %>% layout(barmode = "overlay", 
@@ -90,13 +90,13 @@ values = c(sum(diabetics$PROCEDIMIENTO == "CIRUGIA"), sum(diabetics$PROCEDIMIENT
 procedureInDiabetics <- plot_ly(type='pie', labels=labels, values=values, 
                textinfo='label+percent',
                insidetextorientation='radial',
-               marker =list(colors =  c("#F24B4B","#546FBF", "#D0D9F2"))
+               marker =list(colors =  c("#003A7D","#8ACBDE",  "#C5C6D0"))
                )
 procedureInDiabetics
 ```
 
 
-### **Morbly obese Men**
+### **Men with Morbid Obesity**
 
 *** 
 ```{r echo=FALSE}
@@ -107,7 +107,7 @@ values = c(sum(men$OBESIDAD.MORBIDA == 1), sum(men$OBESIDAD.MORBIDA == 0))
 menMorbidObesity<-plot_ly(type='pie', labels=labels, values=values, 
                textinfo='label+percent',
                insidetextorientation='radial',
-               marker =list(colors =  c("#F24B4B","#546FBF"))
+               marker =list(colors =  c("#003A7D","#8ACBDE"))
                )
 menMorbidObesity
 ```

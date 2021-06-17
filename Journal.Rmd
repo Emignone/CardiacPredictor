@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r echo=FALSE}
-dataset <- read.csv("LabJournalWebsite/dataset.csv", sep=";")
+dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";")
 ```
 
 
@@ -31,11 +31,7 @@ The number of injuries in the different blood vessels is important since both th
 
 ```{r echo=FALSE}
 patientsWithAngioplasty <- subset(dataset,dataset$PROCEDIMIENTO == "ANGIOPLASTIA")
-#numero0 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==0)
-#numero1 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==1)
-#numero2 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==2)
-#numero3 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==3)
-#numero4 <- sum(personasConAngioplastia$NUMERO.DE.LESIONES==4)
+
 zeroInjuries <- 12
 oneInjury <- 78
 twoInjuries <- 79
@@ -49,8 +45,8 @@ data <- data.frame(x, y)
 
 fig <- plot_ly(data, x = ~x, y = ~y, type = 'bar',
              text = y, textposition = 'auto',
-             marker = list(color = '#546FBF',
-                           line = list(color = '#546FBF', width = 1.5)))
+             marker = list(color = '#8ACBDE',
+                           line = list(color = '#8ACBDE', width = 1.5)))
 fig <- fig %>% layout(title = "",
          xaxis = list(title = "Number of Injuries"),
          yaxis = list(title = "Number of Patients"))
@@ -82,13 +78,13 @@ immediateComplicationsAndCEC <- data %>% plot_ly()
 immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% add_trace(x = ~x, y = ~y, type = 'bar',
                          name = 'With Complications',
                          text = y, textposition = 'auto',
-                         marker = list(color = '#F24B4B',
-                                       line = list(color = '#F24B4B', width = 1.5)))
+                         marker = list(color = '#F86F6F',
+                                       line = list(color = '#F86F6F', width = 1.5)))
 immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% add_trace(x = ~x, y = ~y2, type = 'bar',
                          name = 'Without Complications',
                          text = y2, textposition = 'auto',
-                         marker = list(color = '#546FBF',
-                                       line = list(color = '#546FBF', width = 1.5)))
+                         marker = list(color = '#003A7D',
+                                       line = list(color = '#003A7D', width = 1.5)))
 immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% layout(title = "Immediate Complications in Pacients with and without CEC",
                       barmode = 'group',
                       xaxis = list(title = ""),
@@ -121,7 +117,7 @@ hyperLactPie <- plot_ly(type = 'pie',
                         values = hyperLactPieval,
                         textinfo = 'label',
                         insidetextorientation ='radial',
-                        marker = list(colors = c("#546FBF","#F24B4B")),
+                        marker = list(colors = c("#003A7D","#F86F6F")),
                         title = "Complications in Hyperlactic patients"
                         )
       
@@ -145,7 +141,7 @@ feySevPie <- plot_ly(type = 'pie',
                      values = FeySevPieval,
                      textinfo='label',
                      insidetextorientation='radial',
-                     marker = list(colors = c("#546FBF","#F24B4B")),
+                     marker = list(colors = c("#003A7D","#F86F6F")),
                      title = ""
                      )
 feySevPie
@@ -167,8 +163,8 @@ y1 <- c(sum(menOlderThan60WithAngioplasty$COMPLICACIONES.ANGIOPLASTIA== 0), sum(
 y2<- c(sum(menOlderThan60WithAngioplasty$COMPLICACIONES.ANGIOPLASTIA == 1), sum(menOlderThan60WithSurgery$COMPLICACIONES.INMEDIATAS == 1), sum(menOlderThan60WithSurgery$COMPLICACIONES.TARDIAS == 1))
 data <- data.frame(x, y1, y2)
 
-complicationsInMenOlderThan60 <- plot_ly(data, x = ~x, y = ~y1, type = 'bar', name = 'Without Complications', marker = list(color = '#546FBF'))
-complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% add_trace(y = ~y2, name = 'With Complications', marker = list(color = '#F24B4B'))
+complicationsInMenOlderThan60 <- plot_ly(data, x = ~x, y = ~y1, type = 'bar', name = 'Without Complications', marker = list(color = '#003A7D'))
+complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% add_trace(y = ~y2, name = 'With Complications', marker = list(color = '#F86F6F'))
 complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% layout(xaxis = list(title = "", tickangle = 0),
                       yaxis = list(title = ""),
                       margin = list(b = 100),
@@ -195,7 +191,7 @@ entryWomenOlderThan60ForSurgery <- plot_ly(type = 'pie',
                      values = dataEntryToHospital,
                      textinfo='label',
                      insidetextorientation='radial',
-                     marker = list(colors = c("#546FBF","#F24B4B", "#D0D9F2")),
+                     marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
                      title = "Complications in LFEV patients"
                      )
 entryWomenOlderThan60ForSurgery
@@ -214,7 +210,7 @@ values = c(sum(morbidObesity$PROCEDIMIENTO == "ANGIOPLASTIA"), sum(morbidObesity
 
 morbidObesityAndProcedures <- plot_ly(type='pie', labels=labels, values=values, 
                textinfo='label+percent',
-               marker = list(colors = c("#546FBF","#F24B4B", "#D0D9F2")),
+               marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
                insidetextorientation='radial')
 morbidObesityAndProcedures
 ```
@@ -250,13 +246,13 @@ complicationsInSurgery<- data %>% plot_ly()
 complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y, type = 'bar',
                          name = 'Immediate Complications',#inmediatas
                          text = y, textposition = 'auto',
-                         marker = list(color = '#F24B4B',
-                                       line = list(color = '#F24B4B', width = 1.5)))
+                         marker = list(color = '#8ACBDE',
+                                       line = list(color = '#8ACBDE', width = 1.5)))
 complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, type = 'bar',
                          name = 'Late Complications',#tardias
                          text = y2, textposition = 'auto',
-                         marker = list(color = '#546FBF',
-                                       line = list(color = '#546FBF', width = 1.5)))
+                         marker = list(color = '#C5C6D0',
+                                       line = list(color = '#C5C6D0', width = 1.5)))
 complicationsInSurgery <- complicationsInSurgery %>% layout(title = "Immediate and Late Complications in Pacients with different types of surgery",
                       barmode = 'group',
                       xaxis = list(title = ""),
@@ -289,13 +285,13 @@ angioplasties<- data %>% plot_ly()
 angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y, type = 'bar',
                          name = 'Angioplasty',
                          text = y, textposition = 'auto',
-                         marker = list(color = '#F24B4B',
-                                       line = list(color = '#F24B4B', width = 1.5)))
+                         marker = list(color = '#8ACBDE',
+                                       line = list(color = '#8ACBDE', width = 1.5)))
 angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y2, type = 'bar',
                          name = 'Different Procedure',
                          text = y2, textposition = 'auto',
-                         marker = list(color = '#546FBF',
-                                       line = list(color = '#546FBF', width = 1.5)))
+                         marker = list(color = '#C5C6D0',
+                                       line = list(color = '#C5C6D0', width = 1.5)))
 angioplasties <- angioplasties %>% layout(title = "Angioplasty frequency depending on previous procedure",
                       barmode = 'group',
                       xaxis = list(title = ""),
