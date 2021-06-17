@@ -1,5 +1,5 @@
 ---
-title: "INTERPRETATION"
+title: ""
 output:
   html_document:
     toc: true
@@ -23,12 +23,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r echo=FALSE}
 dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 ```
-
-
-# Number of injuries of people who went to angioplasty 
+<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#003A7D">
+    <u>
+    Data Interpretation
+    </u>
+</p>
+<p><br></p>
+# Injuries in Angioplasty
 ***
-The number of injuries in the different blood vessels is important since both this and the injured vessels determine the complexity of the surgery and therefore the choice of procedure
-
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+The number of injuries in the different blood vessels of the patients is important since both this and the injured vessels determine the complexity of the surgery and therefore the choice of procedure.
+</p>
 ```{r echo=FALSE}
 patientsWithAngioplasty <- subset(dataset,dataset$PROCEDIMIENTO == "ANGIOPLASTIA")
 
@@ -53,13 +58,11 @@ fig <- fig %>% layout(title = "",
 
 fig
 ```
-
-
-
 # Extracorporeal circulation
 ***
-
-Risk of immediate complications on patients who underwent surgery and doctors need to use extracorporeal circulation compared to those who did not have extracorporeal circulation. Extracorporeal circulation refers to the circulation of blood outside of the body through a machine that temporarily assumes an organ's functions (eg. heart and lungs).
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+Extracorporeal circulation refers to the circulation of blood outside of the body through a machine that temporarily assumes an organ's functions (eg. heart and lungs). The following bar graph shows the immediate complications on patients who underwent open heart surgery and extracorporeal circulation compared to those who did not have extracorporeal circulation. 
+</p>
 ```{r echo=FALSE}
 CEC<-subset(dataset,dataset$CIRCULACION.EXTRACORPOREA!="NO")
 CECNO<-subset(dataset,dataset$CIRCULACION.EXTRACORPOREA=="NO")
@@ -85,49 +88,52 @@ immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% add_trace(x = ~
                          text = y2, textposition = 'auto',
                          marker = list(color = '#003A7D',
                                        line = list(color = '#003A7D', width = 1.5)))
-immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% layout(title = "Immediate Complications in Pacients with and without CEC",
+immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% layout(title = "",
                       barmode = 'group',
                       xaxis = list(title = ""),
                       yaxis = list(title = "Number of Patients"))
 
 immediateComplicationsAndCEC
 ```
-
-
-
 # Hyperlactic patients with Post-Op Complications
 ***
-
-Hyperlactatemia is the elevated quantity of lactate in blood. While a normal blood lactate level is between 0-2mmol/L, a patient with hyperlactatemia has a level above 3-5mmol/L. When this alteration arises in the operating room or very early in the ICU (early-onset hyperlactatemia), it is strongly associated with adverse outcomes and complications, while late-onset (6-12h in the ICU) is a benign alteration that spontaneously resolves itself within 24 hours. 
-Between the 53 early-onset hyperlactic patients in surgery, 28 of them had complications.
-
-
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+Hyperlactatemia is the elevated quantity of lactate in blood. While a normal blood lactate level is between 0-2mmol/L, a patient with hyperlactatemia has a level above 3-5mmol/L. When this alteration arises in the operating room or very early in the ICU (early-onset hyperlactatemia), it is strongly associated with adverse outcomes and complications, while late-onset (6-12h in the ICU) is a benign alteration that spontaneously resolves itself within 24 hours. Between the 53 early-onset hyperlactic patients in surgery, 28 of them had complications.
+</p>
 ```{r echo=FALSE}
+library(ggplot2)
 library(plotly)
-hyperLact <- subset(dataset,dataset$LACTICO.POP>=3)
-complicsHyperLact <- subset(hyperLact,hyperLact$COMPLICACIONES.INMEDIATAS==1 | hyperLact$COMPLICACIONES.TARDIAS==1)
-hyperLactCir <- subset(hyperLact,hyperLact$PROCEDIMIENTO=="CIRUGIA")
-hyperlactCirCompli <- round(sum(hyperLactCir$COMPLICACIONES.INMEDIATAS==1 | hyperLactCir$COMPLICACIONES.TARDIAS==1)/length(hyperLactCir$COMPLICACIONES.INMEDIATAS)*100)
-hyperLactCirNorm <- round(sum(hyperLactCir$COMPLICACIONES.INMEDIATAS==0 & hyperLactCir$COMPLICACIONES.TARDIAS==0)/length(hyperLactCir$COMPLICACIONES.INMEDIATAS)*100)
-hyperLactPieval<- c(hyperLactCirNorm,hyperlactCirCompli)
-hyperLactpielabels<- c(paste("Without: ",hyperLactCirNorm,"%"),paste("With: ",hyperlactCirCompli,"%"))
+surgerySubset <- subset(dataset,dataset$PROCEDIMIENTO=="CIRUGIA")
+HyperLactHistogram2 <- plot_ly(type='histogram',
+                              x=surgerySubset$LACTICO.POP,
+                              bingroup=1, name = "Total Patients", 
+                              marker = 
+                                list(color= "#2093C3",
+                                     line=list(color="darkgray",width=0.0))
+                              ,nbinsx=100)
 
-hyperLactPie <- plot_ly(type = 'pie',
-                        labels = hyperLactpielabels,
-                        values = hyperLactPieval,
-                        textinfo = 'label',
-                        insidetextorientation ='radial',
-                        marker = list(colors = c("#003A7D","#F86F6F")),
-                        title = "Complications in Hyperlactic patients"
-                        )
-      
-hyperLactPie
+surgeryComplications <- subset(surgerySubset, surgerySubset$COMPLICACIONES.INMEDIATAS >=1 
+                               | surgerySubset$COMPLICACIONES.TARDIAS >= 1)
+
+HyperLactHistogram2 <- HyperLactHistogram2 %>% add_histogram(
+  type = 'histogram',
+  x = surgeryComplications$LACTICO.POP,
+  bingroup=1, name = "Patients with Complications", 
+  marker = 
+    list(color= "#F86F6F",
+         line=list(color="darkgray",width=0.0))
+  ,nbinsx=100)
+HyperLactHistogram2 <- HyperLactHistogram2 %>% layout(barmode = "overlay", 
+                                  xaxis = list(title = "Post-Op Lactate in Blood (mmol/L)")
+                                  ,yaxis = list(title = "Number of Patients"))
+HyperLactHistogram2
+
 ```
-
-# Patients with severe LVEF values with Post-Op complications
+# Severe LVEF values and Post-Op complications
 ***
-Many studies have shown that LVEF values have relation with Post-Op surgery complications. Between the 11 patients in surgery with severe LVEF values, 7 of them had complications.
-
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    Many researches have shown that LVEF values have relation with Post-Op surgery complications (hence, the need to study it in our project). Between the 11 patients in surgery with severe LVEF values, 7 of them had complications.
+</p>
 ```{r echo=FALSE}
 library(plotly)
 severeFey <- subset(dataset,dataset$FEY<=40)
@@ -146,11 +152,11 @@ feySevPie <- plot_ly(type = 'pie',
                      )
 feySevPie
 ```
-
-# Difference between angioplasty complications and surgical complications in men older than 60 years (late and immediate)
-
+# Complications in male patients older than 60 years
 ***
-
+<p style="font-family:Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    The differences in complications between patients who had angioplasty and open heart surgery in this dataset are shown in the next bar graph. 
+</p>
 ```{r echo=FALSE}
 menOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "MASC")
 menOlderThan60WithAngioplasty<- subset(menOlderThan60, menOlderThan60$PROCEDIMIENTO == "ANGIOPLASTIA")
@@ -166,16 +172,15 @@ data <- data.frame(x, y1, y2)
 complicationsInMenOlderThan60 <- plot_ly(data, x = ~x, y = ~y1, type = 'bar', name = 'Without Complications', marker = list(color = '#003A7D'))
 complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% add_trace(y = ~y2, name = 'With Complications', marker = list(color = '#F86F6F'))
 complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% layout(xaxis = list(title = "", tickangle = 0),
-                      yaxis = list(title = ""),
+                      yaxis = list(title = "Number of Patients"),
                       margin = list(b = 100),
                       barmode = 'group')
 complicationsInMenOlderThan60
 ```
-
-# Women older than 60 years whose reason for admission was valve programming and went to surgery
+# Female patients older than 60 years whose reason for admission was valve programming and had an open heart surgery
 ***
-
-
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
 ```{r echo=FALSE}
 surgeryInWomenOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "FEME" & dataset$PROCEDIMIENTO== "CIRUGIA")
 progValv <- round(sum(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO == "PROG VALV")/length(surgeryInWomenOlderThan60$MOTIVO.DE.INGRESO)*100, 2)
@@ -192,16 +197,17 @@ entryWomenOlderThan60ForSurgery <- plot_ly(type = 'pie',
                      textinfo='label',
                      insidetextorientation='radial',
                      marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
-                     title = "Complications in LFEV patients"
+                     title = ""
                      )
 entryWomenOlderThan60ForSurgery
 
 ```
-
-# Morbidly obese male patients and their procedures
-
+<p style="font-family: Noto Sans, sans-serif; font-size:20pt; font-style:normal; color:#000000">
+    Procedures in male patients with morbid obesity
+</p>
 ***
-
+<p style="font-family: Georgia, serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
 ```{r echo=FALSE}
 library(plotly)
 morbidObesity <- subset(dataset,dataset$OBESIDAD.MORBIDA == 1)
@@ -214,10 +220,10 @@ morbidObesityAndProcedures <- plot_ly(type='pie', labels=labels, values=values,
                insidetextorientation='radial')
 morbidObesityAndProcedures
 ```
-
-# Analysis of the immediate and late complications of each type of open heart surgery
-
+# Immediate and late complications in open heart surgery
 ***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
 ```{r echo=FALSE}
 library(plotly)
 
@@ -253,19 +259,18 @@ complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, 
                          text = y2, textposition = 'auto',
                          marker = list(color = '#C5C6D0',
                                        line = list(color = '#C5C6D0', width = 1.5)))
-complicationsInSurgery <- complicationsInSurgery %>% layout(title = "Immediate and Late Complications in Pacients with different types of surgery",
+complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
                       barmode = 'group',
                       xaxis = list(title = ""),
                       yaxis = list(title = "% of Complications"))
 
 complicationsInSurgery
 ```
-
-# Previous angioplasty patients who had a re-angioplasty
+# Previous angioplasty patients who had a second angioplasty
 ***
-We found that many patients who had undergone an angioplasty, had had another one. The cause for this phenomenon may be that the arteries are blocked or obstructed again (it could be the same or other arteries) which is not a rare risk of a first angioplasty.
-
-
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    We found that many patients who had undergone an angioplasty, had had another one performed on them. The cause for this phenomenon may be that the arteries are blocked or obstructed again (it could be the same or other arteries) which is not a rare risk of a first angioplasty.
+</p>
 ```{r echo=FALSE}
 library(tidyr)
 previousInterventionAngioplasty <- subset(dataset, dataset$INTERVENCION.PREVIA=="ANGIOPLASTIA")
@@ -292,11 +297,70 @@ angioplasties <- angioplasties %>% add_trace(x = ~x, y = ~y2, type = 'bar',
                          text = y2, textposition = 'auto',
                          marker = list(color = '#C5C6D0',
                                        line = list(color = '#C5C6D0', width = 1.5)))
-angioplasties <- angioplasties %>% layout(title = "Angioplasty frequency depending on previous procedure",
+angioplasties <- angioplasties %>% layout(title = "",
                       barmode = 'group',
                       xaxis = list(title = ""),
                       yaxis = list(title = "Number of Patients"))
 
 angioplasties
+```
+
+# Diabetic patients and coronary programmed 
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+</p>
+```{r echo=FALSE}
+diabetics <- sum(dataset$DIABETES == 1)
+coronary <- sum(dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
+subsetCoronary <- subset(dataset,dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
+crossedArea <- sum(subsetCoronary$DIABETES == 1)
+library("VennDiagram") 
+grid.newpage()
+g = draw.pairwise.venn(area1 = diabetics,
+                   area2 = coronary,
+                   cross.area = crossedArea,
+                   category = c("Programmed Coronary", "Diabetic Patients"),
+                   fill = c("#8ACBDE","#F86F6F"),
+                   lty = "blank",
+                   inverted = TRUE)
+```
+# Complications in open heart surgery patients who entered for Programmed Coronary
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+
+</p>
+```{r echo=FALSE}
+library(plotly)
+ProgYCirujia <- subset(dataset,dataset$MOTIVO.DE.INGRESO=="PROG CORONARIO" & dataset$PROCEDIMIENTO=="CIRUGIA") 
+
+immediateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.INMEDIATAS == 1))
+noImmediateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.INMEDIATAS == 0))
+
+
+lateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.TARDIAS == 1))
+noLateComplicationsProgYCirujia<-round(sum(ProgYCirujia$COMPLICACIONES.TARDIAS == 0))
+
+x <- c('Immediate Complications', 'Late Complications')#nombres de c.
+y <- c(immediateComplicationsProgYCirujia, lateComplicationsProgYCirujia)
+y2 <- c(noImmediateComplicationsProgYCirujia, noLateComplicationsProgYCirujia)
+data <- data.frame(x, y)
+
+complicationsInSurgery<- data %>% plot_ly()
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y, type = 'bar',
+                         name = 'Yes',#inmediatas
+                         text = y, textposition = 'auto',
+                         marker = list(color = '#003A7D',
+                                       line = list(color = '#003A7D', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% add_trace(x = ~x, y = ~y2, type = 'bar',
+                         name = 'No',#tardias
+                         text = y2, textposition = 'auto',
+                         marker = list(color = '#8ACBDE', 
+                                       line = list(color = '#8ACBDE', width = 1.5)))
+complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
+                      barmode = 'group',
+                      xaxis = list(title = ""),
+                      yaxis = list(title = "Number of pacients"))
+
+complicationsInSurgery
 ```
 

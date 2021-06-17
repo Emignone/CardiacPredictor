@@ -3,3 +3,5 @@ knitr
 ggplot2
 plotly
 tidyr
+futile.logger
+VennDiagram

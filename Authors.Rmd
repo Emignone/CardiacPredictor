@@ -1,14 +1,20 @@
 ---
-title: "Authors"
+title: ""
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#003A7D">
+    <u>
+    Authors
+    </u>
+</p>
+<p><br></p>
 
 
-
+<div class="col-sm-6">
 ## [Maria Emilia Mignone](mailto:emilia.mignone@ing.austral.edu.ar)
 ### **Biomedical engineering student**
 
@@ -16,10 +22,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ***
 
 ## [Micaela Dominguez](mailto:micaela.dominguez@ing.austral.edu.ar)
-### **Biomedical engineering student**
+### **Biomedical and Software engineering student**
 
 ***
 ***
+
 
 ## [Camila Contestabile](mailto:camila.contestabile@ing.austral.edu.ar)
 ### **Biomedical engineering student**
@@ -35,4 +42,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## [Juan Manuel Perez Menendez](mailto:juanmanuel.perezmenendez@ing.austral.edu.ar)
 ### **Software engineering student**
+</div>
+<div class="col-sm-6">
 
+### [Universidad Austral](https://www.austral.edu.ar/)
+
+<a href = "https://www.austral.edu.ar/">
+![](images/LogoAustral.png)
+</a>
+</div>

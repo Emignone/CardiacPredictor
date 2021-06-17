@@ -1,5 +1,5 @@
 ---
-title: "Cardiac events predictor"
+title: ""
 output: html_document
 ---
 ```{r setup, include=FALSE}
@@ -16,22 +16,25 @@ knitr::opts_chunk$set(echo = TRUE)
 dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 ```
 
+<p style="font-family: Noto Sans, sans-serif; font-size:45pt; font-style:normal; color:#2093C3">
+    Cardiac Events Predictor
+</p>
 
-<div class="row" style="padding-top: 30px;">
-<div class="col-sm-6">
-
-We have analyzed the given dataset from different perspectives. 
-We started by researching on the subject and becoming familiar with the different concepts and pathologies. After understanding the subject, we proceeded to apply the knowledge, both in the analysis, the interpretation and finally in the predictor.
-
-## Analysis
-
-```{r}
-
-```
-
-### **Gender**
-
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+We have analyzed the given dataset from different perspectives. We started by researching on the subject and becoming familiar with the different concepts and pathologies. After understanding the subject, we proceeded to apply the knowledge, both in the analysis, the interpretation and finally in the predictor of the dataset.
+</p>
+<p><br></p>
+<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#003A7D">
+    <u>
+    Data Analysis
+    </u>
+</p>
+<p><br></p>
+# Gender
 ***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    The gender of the patients was studied in order to obtain differences and similarities between the two of them, if that was the case. In addition to this, a gender analysis was needed because several reviews and investigation used in this project were focused only on men or women, not always both.
+</p>
 
 ```{r echo=FALSE}
 
@@ -41,14 +44,54 @@ values = c(sum(dataset$SEXO=="FEME"), sum(dataset$SEXO=="MASC"))
 sexPercentages <- plot_ly(type='pie', labels=labels, values=values, 
                    textinfo='label+percent',
                    insidetextorientation='radial',
-                   marker =list(colors =  c("#8ACBDE","#003A7D")))
+                   marker =list(colors =  c("#F86F6F","#003A7D")))
 sexPercentages
 ```
 
-
-### **Abnormal Fey**
-
+# Surgery in Diabetic patients
 ***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    It has been proven that diabetes is a significant factor when it comes to cardiology. The decision to analyze the type of procedures diabetic patients had, in particular, followed that train of thought, as well as the need to gain a deeper insight of the dataset. 
+</p>
+```{r echo=FALSE}
+library(plotly)
+diabetics <- subset(dataset,dataset$DIABETES==1)
+
+labels = c('Surgery','Angioplasty', 'Endovalve')
+values = c(sum(diabetics$PROCEDIMIENTO == "CIRUGIA"), sum(diabetics$PROCEDIMIENTO == "ANGIOPLASTIA"),sum(diabetics$PROCEDIMIENTO == "ENDOVALVULA"))
+
+procedureInDiabetics <- plot_ly(type='pie', labels=labels, values=values, 
+               textinfo='label+percent',
+               insidetextorientation='radial',
+               marker =list(colors =  c("#003A7D","#8ACBDE",  "#C5C6D0"))
+               )
+procedureInDiabetics
+```
+# Male patients with morbid Obesity
+*** 
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    Several researches and investigations have proven that obesity is a risk factor when it comes to different health issues, specially with problems and illnesses related to the heart. There are only two women with obesity in the given dataset, so, in order to be able to make statistically correct conclusions, the decision was made to focus solely on men for this topic.
+</p>
+```{r echo=FALSE}
+library(ggplot2)
+men <- subset(dataset, dataset$SEXO=="MASC")
+labels = c("Men with Obesity", "Men without Obesity")
+values = c(sum(men$OBESIDAD.MORBIDA == 1), sum(men$OBESIDAD.MORBIDA == 0))
+menMorbidObesity<-plot_ly(type='pie', labels=labels, values=values, 
+               textinfo='label+percent',
+               insidetextorientation='radial',
+               marker =list(colors =  c("#F86F6F","#003A7D"))
+               )
+menMorbidObesity
+```
+# Patients and their LVEF values
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+LVEF stands for Left Ventricular Ejection Fraction (LVEF, FEY in spanish), a measurement of how much blood is being pumped out of the left ventricle with each contraction. It's the fraction of chamber volume ejected in systole (stroke volume) in relation to the volume of the blood in the ventricle at the end of diastole (end-diastolic volume) (SV/EDV) * 100.
+A normal LVEF value varies between 50-70%.
+A limit LVEF value varies between 41-49%.
+A severe LVEF value is under 40%.
+</p>
 
 ```{r echo=FALSE}
 library(plotly)
@@ -68,58 +111,6 @@ library(plotly)
                                        ,nbinsx=10)
   feyHistogram <- feyHistogram %>% layout(barmode = "overlay", 
                                 xaxis = list(title = "Eyection Fraction (%)")
-                                ,yaxis = list(title = "N of Patients"))
+                                ,yaxis = list(title = "Number of Patients"))
   feyHistogram
 ```
-
-
-### **Surgery in Diabetic patients**
-
-***
-# 
-
-It has been proven that diabetes is a significant factor when it comes to cardiology. We as a team decided to know which procedures do diabetic patients have, as to provide a deeper insight to the dataset
-
-```{r echo=FALSE}
-library(plotly)
-diabetics <- subset(dataset,dataset$DIABETES==1)
-
-labels = c('Surgery','Angioplasty', 'Endovalve')
-values = c(sum(diabetics$PROCEDIMIENTO == "CIRUGIA"), sum(diabetics$PROCEDIMIENTO == "ANGIOPLASTIA"),sum(diabetics$PROCEDIMIENTO == "ENDOVALVULA"))
-
-procedureInDiabetics <- plot_ly(type='pie', labels=labels, values=values, 
-               textinfo='label+percent',
-               insidetextorientation='radial',
-               marker =list(colors =  c("#003A7D","#8ACBDE",  "#C5C6D0"))
-               )
-procedureInDiabetics
-```
-
-
-### **Men with Morbid Obesity**
-
-*** 
-```{r echo=FALSE}
-library(ggplot2)
-men <- subset(dataset, dataset$SEXO=="MASC")
-labels = c("Men with Obesity", "Men without Obesity")
-values = c(sum(men$OBESIDAD.MORBIDA == 1), sum(men$OBESIDAD.MORBIDA == 0))
-menMorbidObesity<-plot_ly(type='pie', labels=labels, values=values, 
-               textinfo='label+percent',
-               insidetextorientation='radial',
-               marker =list(colors =  c("#003A7D","#8ACBDE"))
-               )
-menMorbidObesity
-```
-
-
-
-</div>
-<div class="col-sm-6">
-
-### [Universidad Austral](https://www.austral.edu.ar/)
-
-<a href = "https://www.austral.edu.ar/">
-![](images/LogoAustral.png)
-</a>
-</div>
