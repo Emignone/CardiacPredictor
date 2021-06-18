@@ -1,0 +1,28 @@
+---
+title: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# bibliography:
+***
+<body>
+    <ul>
+       <li><p style="font-size:12pt;">
+      Kane, A. E., &amp; Howlett, S. E. (2018). Differences in Cardiovascular Aging in Men and Women. Advances in Experimental Medicine and Biology, 389–411. <br>https://doi.org/10.1007/978-3-319-77932-4_25
+      </p></li>
+       <li><p style="font-size:12pt;">
+      Minton, J. & Sidebotham, D. A. (2017). Hyperlactatemia and Cardiac Surgery. The journal of extra-corporeal technology.  <br>https://pubmed.ncbi.nlm.nih.gov/28298660/
+      </p></li>
+       <li><p style="font-size:12pt;">
+      Pieri, M., Belletti, A., Monaco, F., Pisano, A., Musu, M., Dalessandro, V., Monti, G., Finco, G., Zangrillo, A., &amp; Landoni, G. (2016). Outcome of cardiac surgery in patients with low preoperative ejection fraction. BMC Anesthesiology, 16 <br>https://doi.org/10.1186/s12871-016-0271-5
+      </p></li>
+       <li><p style="font-size:12pt;">
+      Valenzuela-Flores, A. G., Valenzuela-Flores, A. A., Ortega-Ramirez, J. A., Penagos-Paniagua, M., &amp; Pascual Peréz-Campos, J. (2005). Alteraciones fisiopatólogicas secundarias a circulación extracorpórea en cirugía cardíaca. Cirugía Y Cirujanos, 73(2), 143–149.<br>https://pubmed.ncbi.nlm.nih.gov/30051398/
+      </p></li>
+    </ul>
+</body>

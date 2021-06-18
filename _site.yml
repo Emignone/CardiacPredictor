@@ -10,6 +10,8 @@ navbar:
       href: Links.html
     - text: "Authors"
       href: Authors.html
+    - text: "Bibliography"
+      href: Biography.html
 output_dir: "docs"
 output: # Output gobal
   html_document: # Variables globales

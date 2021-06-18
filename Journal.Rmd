@@ -24,31 +24,58 @@ knitr::opts_chunk$set(echo = TRUE)
 dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 ```
 <p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#2093C3">
-    <u>
     Data Interpretation
-    </u>
 </p>
 <p><br></p>
-# Diabetic patients and coronary programmed 
+<p><br></p>
+# Diabetic patients and reason for admission
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
 </p>
-```{r echo=FALSE}
-diabetics <- sum(dataset$DIABETES == 1)
-coronary <- sum(dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
-subsetCoronary <- subset(dataset,dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")
-crossedArea <- sum(subsetCoronary$DIABETES == 1)
-library("VennDiagram") 
-grid.newpage()
-g = draw.pairwise.venn(area1 = diabetics,
-                   area2 = coronary,
-                   cross.area = crossedArea,
-                   category = c("Programmed Coronary", "Diabetic Patients"),
-                   fill = c("#8ACBDE","#F86F6F"),
-                   lty = "blank",
-                   inverted = TRUE)
-```
+```{r include=FALSE}
+library(VennDiagram)
+myCol <- c("#F86F6F","#8ACBDE","#003A7D")
 
+# Chart
+venn.diagram(
+  x = list(
+    DIABETES = dataset$X[which(dataset$DIABETES == 1)],
+    CORONARIO = dataset$X[which(dataset$MOTIVO.DE.INGRESO == "PROG CORONARIO")],
+    VALV = dataset$X[which(dataset$MOTIVO.DE.INGRESO == "PROG VALV")]),
+  category.names = c("Diabetics" , "Coronary" , "Valv"),
+  filename = 'venn_diagramm.png',
+  output=TRUE,
+  
+  # Output features
+  imagetype="png" ,
+  height = 480 , 
+  width = 480 , 
+  resolution = 300,
+  compression = "lzw",
+  
+  # Circles
+  lwd = 2,
+  lty = 'blank',
+  fill = myCol,
+  
+  # Numbers
+  cex = .6,
+  fontface = "bold",
+  fontfamily = "sans",
+  
+  # Set names
+  cat.cex = 0.6,
+  cat.fontface = "bold",
+  cat.default.pos = "outer",
+  cat.pos = c(0, 5, 10),
+  cat.dist = c(0.055, 0.055, 0.015),
+  cat.fontfamily = "sans",
+  rotation = 1
+)
+
+```
+![](venn_diagramm.png)
+<p><br></p>
 # Female patients older than 60 years whose reason for admission was valve programming and had an open heart surgery
 
 ***
@@ -74,24 +101,8 @@ entryWomenOlderThan60ForSurgery <- plot_ly(type = 'pie',
                      )
 entryWomenOlderThan60ForSurgery
 ```
-# Procedures in male patients with morbid obesity
-***
-<p style="font-family: Georgia, serif; font-size:13pt; font-style:normal; color:#000000">
-</p>
-```{r echo=FALSE}
-library(plotly)
-morbidObesity <- subset(dataset,dataset$OBESIDAD.MORBIDA == 1)
-labels = c('ANGIOPLASTY','SURGERY','ENDOVALVE')
-values = c(sum(morbidObesity$PROCEDIMIENTO == "ANGIOPLASTIA"), sum(morbidObesity$PROCEDIMIENTO == "CIRUGIA"), sum(morbidObesity$PROCEDIMIENTO == "ENDOVALVULA"))
 
-morbidObesityAndProcedures <- plot_ly(type='pie', labels=labels, values=values, 
-               textinfo='label+percent',
-               marker = list(colors = c("#8ACBDE","#003A7D", "#C5C6D0")),
-               insidetextorientation='radial')
-morbidObesityAndProcedures
-```
-
-
+<p><br></p>
 # Previous angioplasty patients who had a second angioplasty
 
 ***
@@ -131,6 +142,7 @@ angioplasties <- angioplasties %>% layout(title = "",
 
 angioplasties
 ```
+<p><br></p>
 # Immediate and late complications in open heart surgery
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
@@ -177,6 +189,7 @@ complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
 
 complicationsInSurgery
 ```
+<p><br></p>
 # Extracorporeal circulation
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
@@ -214,40 +227,7 @@ immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% layout(title = 
 
 immediateComplicationsAndCEC
 ```
-# Hyperlactic patients with Post-Op Complications
-***
-<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-Hyperlactatemia is the elevated quantity of lactate in blood. While a normal blood lactate level is between 0-2mmol/L, a patient with hyperlactatemia has a level above 3-5mmol/L. When this alteration arises in the operating room or very early in the ICU (early-onset hyperlactatemia), it is strongly associated with adverse outcomes and complications, while late-onset (6-12h in the ICU) is a benign alteration that spontaneously resolves itself within 24 hours. Between the 53 early-onset hyperlactic patients in surgery, 28 of them had complications.
-</p>
-```{r echo=FALSE}
-library(ggplot2)
-library(plotly)
-surgerySubset <- subset(dataset,dataset$PROCEDIMIENTO=="CIRUGIA")
-HyperLactHistogram2 <- plot_ly(type='histogram',
-                              x=surgerySubset$LACTICO.POP,
-                              bingroup=1, name = "Total Patients", 
-                              marker = 
-                                list(color= "#2093C3",
-                                     line=list(color="darkgray",width=0.0))
-                              ,nbinsx=100)
-
-surgeryComplications <- subset(surgerySubset, surgerySubset$COMPLICACIONES.INMEDIATAS >=1 
-                               | surgerySubset$COMPLICACIONES.TARDIAS >= 1)
-
-HyperLactHistogram2 <- HyperLactHistogram2 %>% add_histogram(
-  type = 'histogram',
-  x = surgeryComplications$LACTICO.POP,
-  bingroup=1, name = "Patients with Complications", 
-  marker = 
-    list(color= "#F86F6F",
-         line=list(color="darkgray",width=0.0))
-  ,nbinsx=100)
-HyperLactHistogram2 <- HyperLactHistogram2 %>% layout(barmode = "overlay", 
-                                  xaxis = list(title = "Post-Op Lactate in Blood (mmol/L)")
-                                  ,yaxis = list(title = "Number of Patients"))
-HyperLactHistogram2
-
-```
+<p><br></p>
 # Severe LVEF values and Post-Op complications
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
@@ -271,6 +251,7 @@ feySevPie <- plot_ly(type = 'pie',
                      )
 feySevPie
 ```
+<p><br></p>
 # Complications in open heart surgery patients who entered for Programmed Coronary
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
@@ -309,6 +290,7 @@ complicationsInSurgery <- complicationsInSurgery %>% layout(title = "",
 
 complicationsInSurgery
 ```
+<p><br></p>
 # Complications in male patients older than 60 years
 ***
 <p style="font-family:Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
@@ -334,6 +316,7 @@ complicationsInMenOlderThan60 <- complicationsInMenOlderThan60 %>% layout(xaxis 
                       barmode = 'group')
 complicationsInMenOlderThan60
 ```
+<p><br></p>
 # Injuries in Angioplasty
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">

@@ -11,7 +11,7 @@
 
 
 
-<title>Links.utf8</title>
+<title>Biography.utf8</title>
 
 <script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -273,53 +273,33 @@ $(document).ready(function () {
 </div>
 
 
-<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#2093C3">
-Predictor
-</p>
-After researching, a decision has been made to predict the procedure a patient will go to. The different factors taken into account were:
-<li>
-if a patient is diabetic
-</li>
-<li>
-the age of the patient
-</li>
-<li>
-patient´s reason for admission
-</li>
-<li>
-if the patient has complex coronary anatomy
-</li>
-<li>
-number of injuries in the vessels
-</li>
-<p>
-<br>
-</p>
-<div id="model-chosen" class="section level1">
-<h1>Model chosen</h1>
-When choosing the model, the first thing that was taken into consideration was the type of independent variables (or dependent on each other) with which we were going to predict the procedure. Since the majority of the majority of the variables are categoric except age, which we then classify among: young people, young adults, adult and older people. One of the best models for this type of cat is the Random Forest.
-<p>
-<br>
-</p>
-</div>
-<div id="prediction-quality" class="section level1">
-<h1>Prediction Quality</h1>
-<p><img src="images/Matrix3.png" /></p>
-<p>After generating our model, 104 patiens were used to test the model. Out of all the patients, our model accurately predicted 97 of the cases, giving it a success rate of 93.27%. Out of the cases that weren’t predicted successfully, 7 patients were given false results. We decided to use this model as the amount of false negatives is relatively low, and the false positives are merely a sacrifice needed in order to prevent the possibility of not hospitalizing a patient with a true case.</p>
+<div id="bibliography" class="section level1">
+<h1>bibliography:</h1>
 <hr />
-<img src="images/Matrix4.png" />
-<p>
-<br>
+<body>
+<ul>
+<li>
+<p style="font-size:12pt;">
+Kane, A. E., &amp; Howlett, S. E. (2018). Differences in Cardiovascular Aging in Men and Women. Advances in Experimental Medicine and Biology, 389–411. <br><a href="https://doi.org/10.1007/978-3-319-77932-4_25" class="uri">https://doi.org/10.1007/978-3-319-77932-4_25</a>
 </p>
-<p>Whilst another model was built with multinomial logistic regression, this resulted in a less precise prediction. Out of all the patients, this model accurately predicted 81 of the cases, giving it a success rate of 88.89%.</p>
-That´s the reason why chose the first model.
-<p>
-<br>
+</li>
+<li>
+<p style="font-size:12pt;">
+Minton, J. &amp; Sidebotham, D. A. (2017). Hyperlactatemia and Cardiac Surgery. The journal of extra-corporeal technology. <br><a href="https://pubmed.ncbi.nlm.nih.gov/28298660/" class="uri">https://pubmed.ncbi.nlm.nih.gov/28298660/</a>
 </p>
-</div>
-<div id="auroc-curve" class="section level1">
-<h1>AUROC curve</h1>
-<p>The AUROC curve (Area Under the Receiver Operating Characteristic curve) is used to measure the efficiency or precision of the model using the confusion matrix. It is a curve that can only be calculated for Boolean predictions (YES / NO, HAS / HAS NOT, etc). That is, where the confusion matrix is 2x2.</p>
+</li>
+<li>
+<p style="font-size:12pt;">
+Pieri, M., Belletti, A., Monaco, F., Pisano, A., Musu, M., Dalessandro, V., Monti, G., Finco, G., Zangrillo, A., &amp; Landoni, G. (2016). Outcome of cardiac surgery in patients with low preoperative ejection fraction. BMC Anesthesiology, 16 <br><a href="https://doi.org/10.1186/s12871-016-0271-5" class="uri">https://doi.org/10.1186/s12871-016-0271-5</a>
+</p>
+</li>
+<li>
+<p style="font-size:12pt;">
+Valenzuela-Flores, A. G., Valenzuela-Flores, A. A., Ortega-Ramirez, J. A., Penagos-Paniagua, M., &amp; Pascual Peréz-Campos, J. (2005). Alteraciones fisiopatólogicas secundarias a circulación extracorpórea en cirugía cardíaca. Cirugía Y Cirujanos, 73(2), 143–149.<br><a href="https://pubmed.ncbi.nlm.nih.gov/30051398/" class="uri">https://pubmed.ncbi.nlm.nih.gov/30051398/</a>
+</p>
+</li>
+</ul>
+</body>
 </div>
 
 
