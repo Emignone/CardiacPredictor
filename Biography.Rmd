@@ -8,8 +8,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# bibliography:
-***
+<p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#2093C3">
+    Bibliography
+</p>
+<p><br></p>
+
 <body>
     <ul>
        <li><p style="font-size:12pt;">

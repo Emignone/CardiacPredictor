@@ -16,10 +16,6 @@ knitr::opts_chunk$set(echo = TRUE)
 dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 ```
 
-1 gender
-2 fey
-3 men with obesisty
-4 diabetes
 
 
 <p style="font-family: Noto Sans, sans-serif; font-size:45pt; font-style:normal; color:#2093C3">

@@ -33,7 +33,7 @@ The different factors taken into account were:
 # Model chosen
 
 When choosing the model, the first thing that was taken into consideration was the type of independent variables (or dependent on each other) with which we were going to predict the procedure.
-Since the majority of the majority of the variables are categoric except age, which we then classify among: young people, young adults, adult and older people. One of the best models for this type of cat is the Random Forest.
+Since the majority of the variables are categoric except age, which we then classify among: young people, young adults, adult and older people. One of the best models for this type of categorical variables is the Random Forest.
 <p><br></p>
 # Prediction Quality
 
@@ -46,7 +46,7 @@ After generating our model, 104 patiens were used to test the model. Out of all 
 <p><br></p>
 Whilst another model was built with multinomial logistic regression, this resulted in a less precise prediction. Out of all the patients, this model accurately predicted 81 of the cases, giving it a success rate of 88.89%.
 
-That´s the reason why chose the first model.
+That´s the reason why the first model was chosen.
 <p><br></p>
 
 
@@ -55,6 +55,6 @@ That´s the reason why chose the first model.
 The AUROC curve (Area Under the Receiver Operating Characteristic curve) is used to measure the efficiency or precision of the model using the confusion matrix. It is a curve that can only be calculated for Boolean predictions (YES / NO, HAS / HAS NOT, etc). That is, where the confusion matrix is 2x2.
 
 
-
+![](images/AUROC.jpeg)
 
 

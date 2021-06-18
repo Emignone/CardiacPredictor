@@ -31,7 +31,8 @@ dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 # Diabetic patients and reason for admission
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-</p>
+After finding a relationship of diabetic patients with the different procedures, we decided to begin to interpret the relationship between the different reasons for admission and diabetes. We did this analysis since both data seemed important to us after the research carried out by reading different papers.
+ </p>
 ```{r include=FALSE}
 library(VennDiagram)
 myCol <- c("#F86F6F","#8ACBDE","#003A7D")
@@ -80,6 +81,7 @@ venn.diagram(
 
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+In a research paper, we read the relationship between women over 60 years of age who had entered valve prog and had open heart surgery. This relationship was what helped us to define later the variables used in the predictor. This analysis also helped us to realize that sex was not a significant variable when predicting the type of procedure a patient would have.
 </p>
 ```{r echo=FALSE}
 surgeryInWomenOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "FEME" & dataset$PROCEDIMIENTO== "CIRUGIA")
@@ -103,6 +105,31 @@ entryWomenOlderThan60ForSurgery
 ```
 
 <p><br></p>
+# Severe LVEF values and Post-Op complications
+***
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+    Many researches have shown that LVEF values have relation with Post-Op surgery complications (hence, the need to study it in our project). Between the 11 patients in surgery with severe LVEF values, 7 of them had complications.
+</p>
+```{r echo=FALSE}
+library(plotly)
+severeFey <- subset(dataset,dataset$FEY<=40)
+severeFeySurgery <- subset(severeFey,severeFey$PROCEDIMIENTO=="CIRUGIA")
+severeFeySurgeryComplications <- round(sum(severeFeySurgery$COMPLICACIONES.INMEDIATAS==1)/length(severeFeySurgery$COMPLICACIONES.INMEDIATAS)*100)
+severeFeySurgeryNOComplications <- round(sum(severeFeySurgery$COMPLICACIONES.INMEDIATAS==0)/length(severeFeySurgery$COMPLICACIONES.INMEDIATAS)*100)
+FeySevPieval<- c(severeFeySurgeryNOComplications,severeFeySurgeryComplications)
+FeySevPielabels<- c(paste("Without: ",severeFeySurgeryNOComplications,"%"),paste("With: ",severeFeySurgeryComplications,"%"))
+feySevPie <- plot_ly(type = 'pie', 
+                     labels = FeySevPielabels, 
+                     values = FeySevPieval,
+                     textinfo='label',
+                     insidetextorientation='radial',
+                     marker = list(colors = c("#003A7D","#F86F6F")),
+                     title = ""
+                     )
+feySevPie
+```
+<p><br></p>
+
 # Previous angioplasty patients who had a second angioplasty
 
 ***
@@ -146,6 +173,8 @@ angioplasties
 # Immediate and late complications in open heart surgery
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+We also found it important to analyze how many people suffered some type of complication after having been operated, compared to those who did not have any type of complication, especially to see who, how and how much they were affected by open heart surgeries.
+
 </p>
 ```{r echo=FALSE}
 library(plotly)
@@ -228,33 +257,11 @@ immediateComplicationsAndCEC <- immediateComplicationsAndCEC %>% layout(title = 
 immediateComplicationsAndCEC
 ```
 <p><br></p>
-# Severe LVEF values and Post-Op complications
-***
-<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-    Many researches have shown that LVEF values have relation with Post-Op surgery complications (hence, the need to study it in our project). Between the 11 patients in surgery with severe LVEF values, 7 of them had complications.
-</p>
-```{r echo=FALSE}
-library(plotly)
-severeFey <- subset(dataset,dataset$FEY<=40)
-severeFeySurgery <- subset(severeFey,severeFey$PROCEDIMIENTO=="CIRUGIA")
-severeFeySurgeryComplications <- round(sum(severeFeySurgery$COMPLICACIONES.INMEDIATAS==1)/length(severeFeySurgery$COMPLICACIONES.INMEDIATAS)*100)
-severeFeySurgeryNOComplications <- round(sum(severeFeySurgery$COMPLICACIONES.INMEDIATAS==0)/length(severeFeySurgery$COMPLICACIONES.INMEDIATAS)*100)
-FeySevPieval<- c(severeFeySurgeryNOComplications,severeFeySurgeryComplications)
-FeySevPielabels<- c(paste("Without: ",severeFeySurgeryNOComplications,"%"),paste("With: ",severeFeySurgeryComplications,"%"))
-feySevPie <- plot_ly(type = 'pie', 
-                     labels = FeySevPielabels, 
-                     values = FeySevPieval,
-                     textinfo='label',
-                     insidetextorientation='radial',
-                     marker = list(colors = c("#003A7D","#F86F6F")),
-                     title = ""
-                     )
-feySevPie
-```
-<p><br></p>
+
 # Complications in open heart surgery patients who entered for Programmed Coronary
 ***
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+Most of the patients in our data set who entered by coronary prog had angioplasty as the procedure, but there was a significant number of patients, exactly 47 who underwent surgery and that is why we were interested in analyzing their relationship with complications.
 </p>
 ```{r echo=FALSE}
 library(plotly)
@@ -294,7 +301,7 @@ complicationsInSurgery
 # Complications in male patients older than 60 years
 ***
 <p style="font-family:Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
-    The differences in complications between patients who had angioplasty and open heart surgery in this dataset are shown in the next bar graph. 
+After focusing on the complications that existed with different data from patients who underwent surgery, it seemed important to highlight the difference between the complications of patients who underwent surgery vs those undergoing angioplasty.
 </p>
 ```{r echo=FALSE}
 menOlderThan60<- subset(dataset, dataset$EDAD >= 60 & dataset$SEXO == "MASC")
