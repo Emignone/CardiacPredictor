@@ -11,7 +11,11 @@ knitr::opts_knit$set(root.dir= normalizePath('..'))
 knitr::opts_chunk$set(error = FALSE)
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+<style>
+  .modebar{
+        display: none !important;
+  }
+</style>
 ```{r include=FALSE}
 dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 ```
