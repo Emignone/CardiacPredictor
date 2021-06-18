@@ -11,9 +11,9 @@
 
 
 
-<title>Links.utf8</title>
+<title>Links.knit</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -276,6 +276,7 @@ $(document).ready(function () {
 <p style="font-family: Noto Sans, sans-serif; font-size:35pt; font-style:normal; color:#2093C3">
 Predictor
 </p>
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
 After researching, a decision has been made to predict the procedure a patient will go to. The different factors taken into account were:
 <li>
 if a patient is diabetic
@@ -292,34 +293,42 @@ if the patient has complex coronary anatomy
 <li>
 number of injuries in the vessels
 </li>
+</p>
 <p>
 <br>
 </p>
 <div id="model-chosen" class="section level1">
 <h1>Model chosen</h1>
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
 When choosing the model, the first thing that was taken into consideration was the type of independent variables (or dependent on each other) with which we were going to predict the procedure. Since the majority of the variables are categoric except age, which we then classify among: young people, young adults, adult and older people. One of the best models for this type of categorical variables is the Random Forest.
+</p>
 <p>
 <br>
 </p>
 </div>
 <div id="prediction-quality" class="section level1">
 <h1>Prediction Quality</h1>
-<p><img src="images/Matrix3.png" /></p>
-<p>After generating our model, 104 patiens were used to test the model. Out of all the patients, our model accurately predicted 97 of the cases, giving it a success rate of 93.27%. Out of the cases that weren’t predicted successfully, 7 patients were given false results. We decided to use this model as the amount of false negatives is relatively low, and the false positives are merely a sacrifice needed in order to prevent the possibility of not hospitalizing a patient with a true case.</p>
+<img src="images/Matrix3.png" />
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+After generating our model, 104 patiens were used to test the model. Out of all the patients, our model accurately predicted 97 of the cases, giving it a success rate of 93.27%. Out of the cases that were not predicted successfully, 7 patients were given false results. We decided to use this model as the amount of false negatives is relatively low, and the false positives are merely a sacrifice needed in order to prevent the possibility of not hospitalizing a patient with a true case.
+</p>
 <hr />
 <img src="images/Matrix4.png" />
 <p>
 <br>
 </p>
-<p>Whilst another model was built with multinomial logistic regression, this resulted in a less precise prediction. Out of all the patients, this model accurately predicted 81 of the cases, giving it a success rate of 88.89%.</p>
-That´s the reason why the first model was chosen.
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+Whilst another model was built with multinomial logistic regression, this resulted in a less precise prediction. Out of all the patients, this model accurately predicted 81 of the cases, giving it a success rate of 88.89%. That´s the reason why the first model was chosen.
+</p>
 <p>
 <br>
 </p>
 </div>
 <div id="auroc-curve" class="section level1">
 <h1>AUROC curve</h1>
-<p>The AUROC curve (Area Under the Receiver Operating Characteristic curve) is used to measure the efficiency or precision of the model using the confusion matrix. It is a curve that can only be calculated for Boolean predictions (YES / NO, HAS / HAS NOT, etc). That is, where the confusion matrix is 2x2.</p>
+<p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
+The AUROC curve (Area Under the Receiver Operating Characteristic curve) is used to measure the efficiency or precision of the model using the confusion matrix. It is a curve that can only be calculated for Boolean predictions (YES / NO, HAS / HAS NOT, etc). That is, where the confusion matrix is 2x2.
+</p>
 <p><img src="images/AUROC.jpeg" /></p>
 </div>
 
