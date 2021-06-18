@@ -23,11 +23,11 @@ dataset <- read.csv("CardiacPredictor/dataset.csv", sep=";", dec = ",")
 <p style="font-family: Noto Sans, sans-serif; font-size:13pt; font-style:normal; color:#000000">
 After researching, a decision has been made to predict the procedure a patient will go to.
 The different factors taken into account were: 
-<li> if a patient is diabetic </li>
-<li> the age of the patient </li>
-<li> patient´s reason for admission </li>
-<li> if the patient has complex coronary anatomy </li>
-<li> number of injuries in the vessels </li>
+<li> If a patient is diabetic </li>
+<li> The age of the patient </li>
+<li> Patient´s reason for admission </li>
+<li> If the patient has complex coronary anatomy </li>
+<li> Number of injuries in the vessels </li>
  </p>
 
   <p><br></p>
